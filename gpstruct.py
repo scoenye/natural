@@ -30,13 +30,27 @@ class GPStruct:
     """
 
     def parse(self, gp_file):
-        for line in gp_file:
-            print(line)
+        # Parse tree files have two sections, each with a header. The header and section
+        # are separated by a blank line.
+        for line in gp_file:            # Skip the Parse Tree header
+            if line.strip() == '':      # strip because line endings
+                break
+
+        for line in gp_file:        # Process the parse tree and stop at the end of the section
+            line = line.strip()
+            if line == '':
+                break
+
+            # Each line has a level part and an expression part, separated by +--
+            parts = line.split('+--', maxsplit=1)   # In case the definition contains an expression
+            parts[0] = parts[0].count('|')          # Replace tree depth string with the equivalent number
+
+            print(parts)
 
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
-        description='Read a GOLDParser parse tree file and convert it to Structorier XML'
+        description='Read a GOLDParser parse tree file and convert it to Structorizer XML'
     )
 
     arg_parser.parse_args()
