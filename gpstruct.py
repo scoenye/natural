@@ -20,7 +20,11 @@
 """
 
 import argparse
+import re
 import sys
+
+import nodes.factory
+from nodes.factory import TreeNodeFactory
 
 
 class GPStruct:
@@ -28,6 +32,11 @@ class GPStruct:
     Read a GOLDParser exported parse tree and convert it to
     Structorizer XML
     """
+    expression_l = re.compile(r'<(.+)> ::=')
+
+
+    def __init__(self):
+        self.root = None
 
     def parse(self, gp_file):
         # Parse tree files have two sections, each with a header. The header and section
@@ -36,16 +45,25 @@ class GPStruct:
             if line.strip() == '':      # strip because line endings
                 break
 
-        for line in gp_file:        # Process the parse tree and stop at the end of the section
-            line = line.strip()
-            if line == '':
-                break
+        # The first line should be at level 0. If not, we punt.
+        line = gp_file.readline().strip()
+        # Each line has a level part and an expression part, separated by +--
+        parts = line.split('+--', maxsplit=1)  # In case the definition contains an expression
+        parts[0] = parts[0].count('|')  # Replace tree depth string with the equivalent number
 
-            # Each line has a level part and an expression part, separated by +--
-            parts = line.split('+--', maxsplit=1)   # In case the definition contains an expression
-            parts[0] = parts[0].count('|')          # Replace tree depth string with the equivalent number
+        if parts[0] != 0:
+            print('Bad parsetree file. Initial statement is not at level 0')
+            print('Found {} at level {}'. format(parts[1], parts[0]))
+        else:
+            # Expressions start with a keyword in angle brackets
+            lvalue = self.expression_l.match(parts[1]).group(1)
 
-            print(parts)
+            if lvalue is None:
+                print('Unable to detect a starting expression.')
+            else:
+                root = TreeNodeFactory.node(lvalue)
+
+                root.process(gp_file)
 
 
 if __name__ == '__main__':
