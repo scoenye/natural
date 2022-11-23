@@ -35,6 +35,13 @@ class TreeNode(ABC):
         :return:
         """
 
+    @abstractmethod
+    def render(self):
+        """
+        Render the node in XML format
+        :return:
+        """
+
     def add_terminal(self, terminal):
         """
         Add a new terminal to the node
@@ -69,7 +76,27 @@ class CompositeNode(TreeNode):
         else:
             self.parent.add_node(level, child)
 
+    def _render_open(self):
+        # Override to render a class specific XML element opening
+        pass
+
+    def _render_close(self):
+        # Override to render a class specific XML element closing
+        pass
+
+    def render(self):
+        self._render_open()
+
+        for child in self.children:
+            child.render()
+
+        self._render_close()
+
+
 class LeafNode(TreeNode):
 
     def add_node(self, level, child):
+        pass
+
+    def render(self):
         pass

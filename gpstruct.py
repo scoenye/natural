@@ -83,6 +83,13 @@ class GPStruct:
                         last_node.add_node(parts[0], new_node)
                         last_node = new_node
 
+    def render(self):
+        """
+        Render the parsed GP file as Structurizer XML
+        :return:
+        """
+        self.root.render()
+
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
@@ -94,3 +101,4 @@ if __name__ == '__main__':
     gp_parser = GPStruct()
     gp_parser.parse(sys.stdin)
 
+    gp_parser.render()
