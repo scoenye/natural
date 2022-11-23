@@ -28,16 +28,17 @@ class TreeNodeFactory:
     }
 
     @staticmethod
-    def node(gp_part):
+    def node(level, gp_part):
         """
         Produce a TreeNode for a GP instruction. If no matching
         node can be found, an instruction node is returned.
+        :param level:
         :param gp_part:
         :return:
         """
         temp_node = TreeNodeFactory.nodes.get(gp_part)
 
         if temp_node is None:
-            return structorizer.InstructionNode()
+            return structorizer.InstructionNode(level)
         else:
-            return temp_node()
+            return temp_node(level)

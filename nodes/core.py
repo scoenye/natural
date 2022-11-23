@@ -21,40 +21,55 @@ from abc import ABC, abstractmethod
 
 
 class TreeNode(ABC):
+    def __init__(self, level):
+        self.parent = None      # TreeNode immediately above this node
+        self.level = level      # Depth of this node
+        self.terminals = []     # Terminals found under this node's expression
+
     @abstractmethod
-    def process(self, gp_file):
+    def add_node(self, level, child):
         """
-        Porcess the GP parse tree file and build the node
-        :param gp_file:
+        Add a node to the tree
+        :param level:
+        :param child:
         :return:
         """
+
+    def add_terminal(self, terminal):
+        """
+        Add a new terminal to the node
+        :param terminal: word to add to the collection
+        :return:
+        """
+        self.terminals.append(terminal)
 
 
 class CompositeNode(TreeNode):
-    def __init__(self):
-        super().__init__()
 
-        self.level = 0
+    def __init__(self, level):
+        super().__init__(level)
+
         self.children = []
+        self.terminals = []     # The terminals that make up this instruction
 
-    def process(self, gp_file):
+    def add_node(self, level, child):
         """
-        Process the GP parse tree file and build the node's children
-        :param gp_file:
+        Insert a node in the tree. If the level is higher than the
+        current node's level, the new node will be added as a child of
+        the current node. Otherwise, the new child will be passed up
+        the parent chain until the first node at a lower level is
+        encountered.
+        :param level: depth at which the child belongs
+        :param child: new child TreeNode
         :return:
         """
-        for line in gp_file:        # Process the parse tree and stop at the end of the section
-            line = line.strip()
-            if line == '':
-                break
-
-            # Each line has a level part and an expression part, separated by +--
-            parts = line.split('+--', maxsplit=1)   # In case the definition contains an expression
-            parts[0] = parts[0].count('|')          # Replace tree depth string with the equivalent number
-
-            print(parts)
-
+        if level > self.level:
+            self.children.append(child)
+            child.parent = self
+        else:
+            self.parent.add_node(level, child)
 
 class LeafNode(TreeNode):
-    def process(self, gp_file):
+
+    def add_node(self, level, child):
         pass

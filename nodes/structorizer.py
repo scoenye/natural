@@ -25,5 +25,5 @@ class DiagramNode(core.CompositeNode):
     Structorizer diagram node
     """
 
-class InstructionNode(core.LeafNode):
+class InstructionNode(core.CompositeNode):
     pass
