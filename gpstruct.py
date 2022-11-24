@@ -20,7 +20,6 @@
 """
 
 import argparse
-import re
 import sys
 
 from grammar import GrammarNode
@@ -32,8 +31,6 @@ class GPStruct:
     Read a GOLDParser exported parse tree and convert it to
     Structorizer XML
     """
-    expression_l = re.compile(r'<(.+)> ::=')
-
 
     def __init__(self):
         self.root = None
@@ -61,9 +58,7 @@ class GPStruct:
             print('Found {} at level {}'. format(parts[1], parts[0]))
         else:
             # Expressions start with a keyword in angle brackets
-            lvalue = self.expression_l.match(parts[1])
-
-            if lvalue is None:
+            if parts[1][0] != '<':
                 print('Unable to detect a starting expression.')
             else:
                 self.root = GrammarNode(parts[0], parts[1])
@@ -75,9 +70,8 @@ class GPStruct:
                         break
 
                     parts = self._split_line(line)      # Break up in level and expression
-                    lvalue = self.expression_l.match(parts[1])
 
-                    if lvalue is None:      # line contains a terminal
+                    if parts[1][0] != '<':      # line contains a terminal
                         last_node.add_terminal(parts[1])
                     else:
                         new_node = GrammarNode(parts[0], parts[1])
