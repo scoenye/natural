@@ -22,12 +22,19 @@ from datetime import date
 
 class Statement:
 
-    def render_open(self):
-        # Override to render a class specific XML element opening
+    def render_open(self, terminals):
+        """
+        Generate the opening phrase
+        :param terminals: list of words that may be needed
+        :return:
+        """
         pass
 
     def render_close(self):
-        # Override to render a class specific XML element closing
+        """
+        Generate the closing phrase
+        :return:
+        """
         pass
 
 
@@ -36,7 +43,7 @@ class DiagramNode(Statement):
     Structorizer diagram node
     """
 
-    def render_open(self):
+    def render_open(self, terminals):
         # TODO: make the program name an attribute
         today = date.today().isoformat()
 
@@ -55,9 +62,9 @@ class DiagramNode(Statement):
 
 
 class InstructionNode(Statement):
-    def render_open(self):
+    def render_open(self, terminals):
         # Suppress the instruction if it does not contain any terminals
-        if self.terminals:
+        if terminals:
             # Instructions contain no other elements so the closing tag is included.
             print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
-                  '</instruction>'.format(' '.join(self.terminals)))
+                  '</instruction>'.format(' '.join(terminals)))

@@ -24,6 +24,7 @@ import re
 import sys
 
 from grammar import GrammarNode
+from structorizer.factory import StatementFactory
 
 
 class GPStruct:
@@ -73,7 +74,7 @@ class GPStruct:
                     if line == '':
                         break
 
-                    parts = self._split_line(line)
+                    parts = self._split_line(line)      # Break up in level and expression
                     lvalue = self.expression_l.match(parts[1])
 
                     if lvalue is None:      # line contains a terminal
@@ -83,12 +84,13 @@ class GPStruct:
                         last_node.add_node(parts[0], new_node)
                         last_node = new_node
 
-    def render(self):
+    def render(self, factory):
         """
         Render the parsed GP file as Structurizer XML
+        :param factory: Diagram element factory
         :return:
         """
-        self.root.render()
+        self.root.render(factory)
 
 
 if __name__ == '__main__':
@@ -101,4 +103,4 @@ if __name__ == '__main__':
     gp_parser = GPStruct()
     gp_parser.parse(sys.stdin)
 
-    gp_parser.render()
+    gp_parser.render(StatementFactory)

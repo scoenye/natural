@@ -53,6 +53,17 @@ class GrammarNode:
         """
         self.terminals.append(terminal)
 
-    def render(self):
+    def render(self, factory):
+        """
+        Render the formatted grammar
+        :param factory: formatting factory
+        :return:
+        """
+        renderer = factory.node(self.expression)
+
+        renderer.render_open(self.terminals)
+
         for child in self.children:
-            child.render()
+            child.render(factory)
+
+        renderer.render_close()

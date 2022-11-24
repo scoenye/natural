@@ -19,7 +19,7 @@
 from structorizer import nodes
 
 
-class TreeNodeFactory:
+class StatementFactory:
     """
     Create a TreeNode for a GP parse tree instruction part
     """
@@ -28,17 +28,16 @@ class TreeNodeFactory:
     }
 
     @staticmethod
-    def node(level, gp_part):
+    def node(gp_part):
         """
         Produce a TreeNode for a GP instruction. If no matching
         node can be found, an instruction node is returned.
-        :param level:
         :param gp_part:
         :return:
         """
-        temp_node = TreeNodeFactory.nodes.get(gp_part)
+        temp_node = StatementFactory.nodes.get(gp_part)
 
         if temp_node is None:
-            return nodes.InstructionNode(level)
+            return nodes.InstructionNode()
         else:
-            return temp_node(level)
+            return temp_node()
