@@ -18,7 +18,7 @@
 """
 
 
-class CompositeNode:
+class GrammarNode:
 
     def __init__(self, level, expression):
         self.level = level      # Depth of this node
