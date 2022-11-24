@@ -20,12 +20,13 @@
 
 class CompositeNode:
 
-    def __init__(self, level):
-        self.parent = None      # TreeNode immediately above this node
+    def __init__(self, level, expression):
         self.level = level      # Depth of this node
+        self.expression = expression
+
+        self.parent = None      # Node immediately above this node
         self.terminals = []     # Terminals found under this node's expression
         self.children = []
-        self.terminals = []     # The terminals that make up this instruction
 
     def add_node(self, level, child):
         """
@@ -35,7 +36,7 @@ class CompositeNode:
         the parent chain until the first node at a lower level is
         encountered.
         :param level: depth at which the child belongs
-        :param child: new child TreeNode
+        :param child: new child node
         :return:
         """
         if level > self.level:
@@ -52,18 +53,6 @@ class CompositeNode:
         """
         self.terminals.append(terminal)
 
-    def _render_open(self):
-        # Override to render a class specific XML element opening
-        pass
-
-    def _render_close(self):
-        # Override to render a class specific XML element closing
-        pass
-
     def render(self):
-        self._render_open()
-
         for child in self.children:
             child.render()
-
-        self._render_close()

@@ -21,12 +21,23 @@ from nodes import grammar
 from datetime import date
 
 
-class DiagramNode(grammar.CompositeNode):
+class Statement:
+
+    def render_open(self):
+        # Override to render a class specific XML element opening
+        pass
+
+    def render_close(self):
+        # Override to render a class specific XML element closing
+        pass
+
+
+class DiagramNode(Statement):
     """
     Structorizer diagram node
     """
 
-    def _render_open(self):
+    def render_open(self):
         # TODO: make the program name an attribute
         today = date.today().isoformat()
 
@@ -39,13 +50,13 @@ class DiagramNode(grammar.CompositeNode):
               'text="{}" comment="" color="ffffff" type="program" style="nice">'.format(today, 'PROGRAM'))
         print('  <children>')
 
-    def _render_close(self):
+    def render_close(self):
         print('  </children>')
         print('</root>')
 
 
-class InstructionNode(grammar.CompositeNode):
-    def _render_open(self):
+class InstructionNode(Statement):
+    def render_open(self):
         # Suppress the instruction if it does not contain any terminals
         if self.terminals:
             # Instructions contain no other elements so the closing tag is included.

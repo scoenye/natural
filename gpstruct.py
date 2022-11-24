@@ -23,7 +23,7 @@ import argparse
 import re
 import sys
 
-from nodes.factory import TreeNodeFactory
+from nodes.grammar import CompositeNode
 
 
 class GPStruct:
@@ -65,7 +65,7 @@ class GPStruct:
             if lvalue is None:
                 print('Unable to detect a starting expression.')
             else:
-                self.root = TreeNodeFactory.node(parts[0], lvalue.group(1))
+                self.root = CompositeNode(parts[0], parts[1])
                 last_node = self.root
 
                 for line in gp_file:  # Process the parse tree and stop at the end of the section
@@ -79,7 +79,7 @@ class GPStruct:
                     if lvalue is None:      # line contains a terminal
                         last_node.add_terminal(parts[1])
                     else:
-                        new_node = TreeNodeFactory.node(parts[0], lvalue.group(1))
+                        new_node = CompositeNode(parts[0], parts[1])
                         last_node.add_node(parts[0], new_node)
                         last_node = new_node
 
