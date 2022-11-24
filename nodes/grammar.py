@@ -17,45 +17,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from abc import ABC, abstractmethod
 
+class CompositeNode:
 
-class TreeNode(ABC):
     def __init__(self, level):
         self.parent = None      # TreeNode immediately above this node
         self.level = level      # Depth of this node
         self.terminals = []     # Terminals found under this node's expression
-
-    @abstractmethod
-    def add_node(self, level, child):
-        """
-        Add a node to the tree
-        :param level:
-        :param child:
-        :return:
-        """
-
-    @abstractmethod
-    def render(self):
-        """
-        Render the node in XML format
-        :return:
-        """
-
-    def add_terminal(self, terminal):
-        """
-        Add a new terminal to the node
-        :param terminal: word to add to the collection
-        :return:
-        """
-        self.terminals.append(terminal)
-
-
-class CompositeNode(TreeNode):
-
-    def __init__(self, level):
-        super().__init__(level)
-
         self.children = []
         self.terminals = []     # The terminals that make up this instruction
 
@@ -76,6 +44,14 @@ class CompositeNode(TreeNode):
         else:
             self.parent.add_node(level, child)
 
+    def add_terminal(self, terminal):
+        """
+        Add a new terminal to the node
+        :param terminal: word to add to the collection
+        :return:
+        """
+        self.terminals.append(terminal)
+
     def _render_open(self):
         # Override to render a class specific XML element opening
         pass
@@ -91,12 +67,3 @@ class CompositeNode(TreeNode):
             child.render()
 
         self._render_close()
-
-
-class LeafNode(TreeNode):
-
-    def add_node(self, level, child):
-        pass
-
-    def render(self):
-        pass

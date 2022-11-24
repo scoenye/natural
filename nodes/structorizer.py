@@ -17,11 +17,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from nodes import core
+from nodes import grammar
 from datetime import date
 
 
-class DiagramNode(core.CompositeNode):
+class DiagramNode(grammar.CompositeNode):
     """
     Structorizer diagram node
     """
@@ -44,7 +44,7 @@ class DiagramNode(core.CompositeNode):
         print('</root>')
 
 
-class InstructionNode(core.CompositeNode):
+class InstructionNode(grammar.CompositeNode):
     def _render_open(self):
         # Suppress the instruction if it does not contain any terminals
         if self.terminals:
