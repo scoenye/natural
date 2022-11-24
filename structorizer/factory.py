@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from nodes import structorizer
+from structorizer import nodes
 
 
 class TreeNodeFactory:
@@ -24,7 +24,7 @@ class TreeNodeFactory:
     Create a TreeNode for a GP parse tree instruction part
     """
     nodes = {
-        'program': structorizer.DiagramNode
+        'program': nodes.DiagramNode
     }
 
     @staticmethod
@@ -39,6 +39,6 @@ class TreeNodeFactory:
         temp_node = TreeNodeFactory.nodes.get(gp_part)
 
         if temp_node is None:
-            return structorizer.InstructionNode(level)
+            return nodes.InstructionNode(level)
         else:
             return temp_node(level)
