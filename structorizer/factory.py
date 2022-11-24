@@ -44,6 +44,6 @@ class StatementFactory:
         temp_node = StatementFactory.nodes.get(lvalue.group(1))
 
         if temp_node is None:
-            return nodes.InstructionNode()
+            return nodes.Statement()    # The null renderer
         else:
             return temp_node()
