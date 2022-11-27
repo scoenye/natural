@@ -18,7 +18,7 @@
 """
 
 
-class GrammarNode:
+class ExpressionNode:
 
     def __init__(self, level, expression):
         self.level = level      # Depth of this node
@@ -67,3 +67,4 @@ class GrammarNode:
             child.render(factory)
 
         renderer.render_close()
+

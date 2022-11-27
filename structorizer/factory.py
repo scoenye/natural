@@ -28,7 +28,8 @@ class StatementFactory:
     expression_l = re.compile(r'<(.+)> ::=')
 
     nodes = {
-        'program': nodes.DiagramNode
+        'program': nodes.DiagramNode,
+        'INCLUDE': nodes.InstructionNode
     }
 
     @staticmethod

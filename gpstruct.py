@@ -22,7 +22,7 @@
 import argparse
 import sys
 
-from grammar import GrammarNode
+from grammar import ExpressionNode
 from structorizer.factory import StatementFactory
 
 
@@ -61,7 +61,7 @@ class GPStruct:
             if parts[1][0] != '<':
                 print('Unable to detect a starting expression.')
             else:
-                self.root = GrammarNode(parts[0], parts[1])
+                self.root = ExpressionNode(parts[0], parts[1])
                 last_node = self.root
 
                 for line in gp_file:  # Process the parse tree and stop at the end of the section
@@ -74,7 +74,7 @@ class GPStruct:
                     if parts[1][0] != '<':      # line contains a terminal
                         last_node.add_terminal(parts[1])
                     else:
-                        new_node = GrammarNode(parts[0], parts[1])
+                        new_node = ExpressionNode(parts[0], parts[1])
                         last_node.add_node(parts[0], new_node)
                         last_node = new_node
 
