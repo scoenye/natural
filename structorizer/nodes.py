@@ -22,10 +22,9 @@ from datetime import date
 
 class Statement:
 
-    def render_open(self, terminals):
+    def render_open(self):
         """
         Generate the opening phrase
-        :param terminals: list of words that may be needed
         :return:
         """
         pass
@@ -43,7 +42,7 @@ class DiagramNode(Statement):
     Structorizer diagram node
     """
 
-    def render_open(self, terminals):
+    def render_open(self):
         # TODO: make the program name an attribute
         today = date.today().isoformat()
 
@@ -62,9 +61,8 @@ class DiagramNode(Statement):
 
 
 class InstructionNode(Statement):
-    def render_open(self, terminals):
+    def render_open(self):
         # Suppress the instruction if it does not contain any terminals
-        if terminals:
-            # Instructions contain no other elements so the closing tag is included.
-            print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
-                  '</instruction>'.format(' '.join(terminals)))
+        # Instructions contain no other elements so the closing tag is included.
+        print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
+              '</instruction>'.format(' '.join(['TBD'])))

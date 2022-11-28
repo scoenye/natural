@@ -18,14 +18,27 @@
 """
 
 
-class ExpressionNode:
 
+class GrammarNode:
+    """
+    GP grammar node interface
+    """
     def __init__(self, level, expression):
         self.level = level      # Depth of this node
         self.expression = expression
 
         self.parent = None      # Node immediately above this node
-        self.terminals = []     # Terminals found under this node's expression
+
+
+class ExpressionNode(GrammarNode):
+    """
+    GP grammar node to hold an expression. ExpressionNodes may contain
+    other GrammarNodes.
+    """
+
+    def __init__(self, level, expression):
+        super().__init__(level, expression)
+
         self.children = []
 
     def add_node(self, level, child):
@@ -45,13 +58,6 @@ class ExpressionNode:
         else:
             self.parent.add_node(level, child)
 
-    def add_terminal(self, terminal):
-        """
-        Add a new terminal to the node
-        :param terminal: word to add to the collection
-        :return:
-        """
-        self.terminals.append(terminal)
 
     def render(self, factory):
         """
@@ -61,10 +67,32 @@ class ExpressionNode:
         """
         renderer = factory.node(self.expression)
 
-        renderer.render_open(self.terminals)
+        renderer.render_open()
 
         for child in self.children:
             child.render(factory)
 
         renderer.render_close()
 
+
+class TerminalNode(GrammarNode):
+    """
+    GP grammar node to hold terminals. TerminalNodes are leaf nodes.
+    """
+
+    def add_node(self, level, child):
+        """
+        TerminalNodes do not have child nodes.
+        :param level: depth at which the child belongs
+        :param child: new child node
+        :return:
+        """
+        pass
+
+    def render(self, factory):
+        """
+        Render the formatted grammar
+        :param factory: formatting factory
+        :return:
+        """
+        print(self.expression)

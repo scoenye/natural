@@ -22,7 +22,7 @@
 import argparse
 import sys
 
-from grammar import ExpressionNode
+from grammar import ExpressionNode, TerminalNode
 from structorizer.factory import StatementFactory
 
 
@@ -72,7 +72,8 @@ class GPStruct:
                     parts = self._split_line(line)      # Break up in level and expression
 
                     if parts[1][0] != '<':      # line contains a terminal
-                        last_node.add_terminal(parts[1])
+                        new_node = TerminalNode(parts[0], parts[1])
+                        last_node.add_node(parts[0], new_node)
                     else:
                         new_node = ExpressionNode(parts[0], parts[1])
                         last_node.add_node(parts[0], new_node)
