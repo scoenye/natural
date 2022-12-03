@@ -17,9 +17,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+from abc import ABC, abstractmethod
 
 
-class GrammarNode:
+class GrammarNode(ABC):
     """
     GP grammar node interface
     """
@@ -28,6 +29,14 @@ class GrammarNode:
         self.expression = expression
 
         self.parent = None      # Node immediately above this node
+
+    @abstractmethod
+    def render(self, factory):
+        """
+        Produce diagram contents for the grammar node
+        :param factory: diagram node factory class
+        :return:
+        """
 
 
 class ExpressionNode(GrammarNode):
@@ -58,21 +67,25 @@ class ExpressionNode(GrammarNode):
         else:
             self.parent.add_node(level, child)
 
+    def traverse(self):
+        """
+        Go over the branch nodes in order
+        :return:
+        """
+        yield from self.children
 
     def render(self, factory):
         """
-        Render the formatted grammar
-        :param factory: formatting factory
+        Produce a diagram node for this expression
+        :param factory:
         :return:
         """
-        renderer = factory.node(self.expression)
+        lvalue = self.expression.split('::=')[0]
 
-        renderer.render_open()
+        renderer = factory.node(lvalue)
+        content = renderer.render(factory, self)
 
-        for child in self.children:
-            child.render(factory)
-
-        renderer.render_close()
+        return content
 
 
 class TerminalNode(GrammarNode):
@@ -91,8 +104,8 @@ class TerminalNode(GrammarNode):
 
     def render(self, factory):
         """
-        Render the formatted grammar
-        :param factory: formatting factory
+        A TerminalNode returns its keyword
+        :param factory: diagram node factory class
         :return:
         """
-        print(self.expression)
+        return self.expression

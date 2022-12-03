@@ -36,6 +36,14 @@ class Statement:
         """
         pass
 
+    def render(self, factory, gp_node):
+        node_text = []
+
+        for child in gp_node.traverse():
+            node_text.append(child.render(factory))
+
+        return node_text
+
 
 class DiagramNode(Statement):
     """

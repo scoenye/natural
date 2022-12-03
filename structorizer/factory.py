@@ -25,11 +25,11 @@ class StatementFactory:
     """
     Create a TreeNode for a GP parse tree instruction part
     """
-    expression_l = re.compile(r'<(.+)> ::=')
+    expression_l = re.compile(r'<(.+)>')
 
     nodes = {
         'program': nodes.DiagramNode,
-        'INCLUDE': nodes.InstructionNode
+        'DEFINE_DATA': nodes.InstructionNode
     }
 
     @staticmethod
