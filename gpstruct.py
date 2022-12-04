@@ -85,7 +85,8 @@ class GPStruct:
         :param factory: Diagram element factory
         :return:
         """
-        self.root.render(factory)
+        diagram = self.root.render(factory)
+        print(diagram)
 
 
 if __name__ == '__main__':

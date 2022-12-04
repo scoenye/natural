@@ -29,7 +29,8 @@ class StatementFactory:
 
     nodes = {
         'program': nodes.DiagramNode,
-        'DEFINE_DATA': nodes.InstructionNode
+        'DEFINE_DATA': nodes.InstructionNode,
+        'END': nodes.InstructionNode
     }
 
     @staticmethod

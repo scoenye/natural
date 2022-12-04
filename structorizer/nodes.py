@@ -21,15 +21,17 @@ from datetime import date
 
 
 class Statement:
+    def __init__(self):
+        self.node_text = []
 
-    def render_open(self):
+    def open(self):
         """
         Generate the opening phrase
         :return:
         """
         pass
 
-    def render_close(self):
+    def close(self):
         """
         Generate the closing phrase
         :return:
@@ -37,12 +39,21 @@ class Statement:
         pass
 
     def render(self, factory, gp_node):
-        node_text = []
-
+        """
+        Collect the entities that make up the grammar node. A Statement
+        is created for each expression as processing descends down the
+        grammar tree. When the lowest level is reached, all terminals
+        are joined and returned as the outcome of the statement. This
+        repeats as execution ascends back up the grammar tree, leading
+        to a single line of text for gp_node.
+        :param factory:
+        :param gp_node:
+        :return:
+        """
         for child in gp_node.traverse():
-            node_text.append(child.render(factory))
+            self.node_text.append(child.render(factory))
 
-        return node_text
+        return ' '.join(self.node_text)
 
 
 class DiagramNode(Statement):
@@ -50,7 +61,7 @@ class DiagramNode(Statement):
     Structorizer diagram node
     """
 
-    def render_open(self):
+    def open(self):
         # TODO: make the program name an attribute
         today = date.today().isoformat()
 
@@ -63,14 +74,26 @@ class DiagramNode(Statement):
               'text="{}" comment="" color="ffffff" type="program" style="nice">'.format(today, 'PROGRAM'))
         print('  <children>')
 
-    def render_close(self):
+    def close(self):
         print('  </children>')
         print('</root>')
 
+    def render(self, factory, gp_node):
+        self.open()
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
 
 class InstructionNode(Statement):
-    def render_open(self):
-        # Suppress the instruction if it does not contain any terminals
+    def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
-              '</instruction>'.format(' '.join(['TBD'])))
+              '</instruction>'.format(' '.join(self.node_text)))
+
+    def render(self, factory, gp_node):
+        super().render(factory, gp_node)
+        self.open()
+
+        return ''       # The node text has been printed so we return an empty string
