@@ -29,7 +29,14 @@ class StatementFactory:
 
     nodes = {
         'program': nodes.DiagramNode,
+        'ASSIGN': nodes.InstructionNode,
+        'anon_ASSIGN': nodes.InstructionNode,
         'DEFINE_DATA': nodes.InstructionNode,
+#        'DEFINE_SUBROUTINE': nodes.InstructionNode,
+        'INCLUDE': nodes.InstructionNode,
+        'MOVE': nodes.InstructionNode,
+#        'REDEFINE': nodes.InstructionNode,
+        'RESET': nodes.InstructionNode,
         'END': nodes.InstructionNode
     }
 
