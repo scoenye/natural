@@ -23,6 +23,7 @@ from datetime import date
 class Statement:
     def __init__(self):
         self.node_text = []
+        self.gp_children = None
 
     def open(self):
         """
@@ -38,6 +39,12 @@ class Statement:
         """
         pass
 
+    def _prime_generator(self, gp_node):
+        # Removing retrieval of the generator from the render method makes
+        # reuse by overriding descendants possible.
+        if self.gp_children is None:
+            self.gp_children = gp_node.traverse()
+
     def render(self, factory, gp_node):
         """
         Collect the entities that make up the grammar node. A Statement
@@ -50,7 +57,9 @@ class Statement:
         :param gp_node:
         :return:
         """
-        for child in gp_node.traverse():
+        self._prime_generator(gp_node)
+
+        for child in self.gp_children:
             self.node_text.append(child.render(factory))
 
         return ' '.join(self.node_text)
@@ -125,24 +134,21 @@ class AlternativeNode(Statement):
         # Out on a limb: the first child node is the IF statement itself, the 2nd the expression.
         # Hack our way out: drop the 1st child (also takes care of the unwanted IF), process the
         # 2nd child here.
-        children = gp_node.traverse()           # Keep the generator as each call to traverse returns a fresh one
+        self._prime_generator(gp_node)
 
         # Collect the <IF> expression - contains the IF terminal
-        expression = next(children)
+        expression = next(self.gp_children)
         # Although not necessary, keep node_text a list in order to maintain consistency
         self.node_text = [expression.render(factory)]
 
         # This is (should be...) the logical expression.
-        expression = next(children)
+        expression = next(self.gp_children)
         self.node_text = [expression.render(factory)]   # list for consistency
 
-        self.open()                            # This embeds the expression in the element open statement
+        self.open()                             # This embeds the expression in the element open statement
 
-        self.node_text = []                    # Start over for the qTrue/qFalse branches
-
-        # Can't use super() as that will create a new generator and start over
-        for child in children:
-            self.node_text.append(child.render(factory))
+        self.node_text = []                     # Start over for the qTrue/qFalse branches
+        super().render(factory, gp_node)        # Process remaining gp_node children
 
         self.close()
 
