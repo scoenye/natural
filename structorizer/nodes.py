@@ -86,6 +86,27 @@ class DiagramNode(Statement):
         return ''       # The node text has been printed so we return an empty string
 
 
+class WhileNode(Statement):
+    """
+    Shell of the WHILE statement
+    """
+    def open(self):
+        print('<while text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+        print('  <qWhile>')
+
+    def close(self):
+        print('  </qWhile>')
+        print('</while>')
+
+    def render(self, factory, gp_node):
+        # FIXME: Similar issues as AlternativeNode, but worse as FIND has a million optional statement.
+        self.open()
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
 class AlternativeNode(Statement):
     """
     Shell of the IF statement

@@ -33,6 +33,7 @@ class StatementFactory:
         'anon_ASSIGN': nodes.InstructionNode,
         'DEFINE_DATA': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
+        'FIND_with_loop': nodes.WhileNode,
         'IF_closed': nodes.AlternativeNode,
         'IF_open': nodes.AlternativeNode,
         'THEN_closed': nodes.AlternativeTrueNode,
