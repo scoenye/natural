@@ -86,7 +86,68 @@ class DiagramNode(Statement):
         return ''       # The node text has been printed so we return an empty string
 
 
+class AlternativeNode(Statement):
+    """
+    Shell of the IF statement
+    """
+
+    # Problem: logical expression starts at the same level as IF
+    def open(self):
+        print('<alternative text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+
+    def close(self):
+        print('</alternative>')
+
+    def render(self, factory, gp_node):
+        self.open()
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
+class AlternativeTrueNode(Statement):
+    """
+    Alternative statement True branch
+    """
+    def open(self):
+        print('<qTrue>')
+
+    def close(self):
+        print('</qTrue>')
+
+    def render(self, factory, gp_node):
+        self.open()
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
+class AlternativeFalseNode(Statement):
+    """
+    Alternative statement False branch
+    """
+    def open(self):
+        print('<qFalse>')
+
+    def close(self):
+        print('</qFalse>')
+
+    def render(self, factory, gp_node):
+        self.open()
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
 class InstructionNode(Statement):
+    """
+    Node for non-container instructions. Instructions can be made up of
+    multiple parser lines. The terminals for all parser lines are
+    concatenated and returned as the content.
+    """
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
