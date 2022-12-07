@@ -39,6 +39,7 @@ class StatementFactory:
         'THEN_open': nodes.AlternativeTrueNode,
         'ELSE_closed': nodes.AlternativeFalseNode,
         'ELSE_open': nodes.AlternativeFalseNode,
+        'IGNORE': nodes.InstructionNode,
         'INCLUDE': nodes.InstructionNode,
         'MOVE': nodes.InstructionNode,
 #        'REDEFINE': nodes.InstructionNode,
