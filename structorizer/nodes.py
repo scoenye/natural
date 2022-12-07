@@ -99,8 +99,30 @@ class AlternativeNode(Statement):
         print('</alternative>')
 
     def render(self, factory, gp_node):
-        self.open()
-        super().render(factory, gp_node)
+        # Problem: the logical expression is needed by open() but it is not known at this time.
+        # super() will collect it, but will also inject any child instructions first. Not very usable.
+        # Out on a limb: the first child node is the IF statement itself, the 2nd the expression.
+        # Hack our way out: drop the 1st child (also takes care of the unwanted IF), process the
+        # 2nd child here.
+        children = gp_node.traverse()           # Keep the generator as each call to traverse returns a fresh one
+
+        # Collect the <IF> expression - contains the IF terminal
+        expression = next(children)
+        # Although not necessary, keep node_text a list in order to maintain consistency
+        self.node_text = [expression.render(factory)]
+
+        # This is (should be...) the logical expression.
+        expression = next(children)
+        self.node_text = [expression.render(factory)]   # list for consistency
+
+        self.open()                            # This embeds the expression in the element open statement
+
+        self.node_text = []                    # Start over for the qTrue/qFalse branches
+
+        # Can't use super() as that will create a new generator and start over
+        for child in children:
+            self.node_text.append(child.render(factory))
+
         self.close()
 
         return ''       # The node text has been printed so we return an empty string
