@@ -60,7 +60,9 @@ class Statement:
         self._prime_generator(gp_node)
 
         for child in self.gp_children:
-            self.node_text.append(child.render(factory))
+            child_content = child.render(factory)
+            if child_content:
+                self.node_text.append(child_content)
 
         return ' '.join(self.node_text)
 
@@ -125,7 +127,9 @@ class WhileNode(Statement):
         for child in self.gp_children:
             if child.matches('<loop_statement_list>'):
                 break
-            self.node_text.append(child.render(factory))
+            child_content = child.render(factory)
+            if child_content:
+                self.node_text.append(child_content)
 
         self.open()     # Output loop statement with the current contents of node_text
 
