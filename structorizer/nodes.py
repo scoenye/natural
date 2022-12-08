@@ -97,9 +97,62 @@ class DiagramNode(Statement):
         return ''       # The node text has been printed so we return an empty string
 
 
+class ForNode(Statement):
+    """
+    FOR statement outer XML element
+    """
+    def open(self):
+        # for uses &#60; (less than) to separate the loop variable from the values
+        print('<for text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+        print('  <qFor>')
+
+    def close(self):
+        print('  </qFor>')
+        print('</for>')
+
+    def render(self, factory, gp_node):
+        """
+        Find the various parts that make up the FOR statement controls
+        and assemble the element text.
+        :param factory:
+        :param gp_node:
+        :return:
+        """
+        self._prime_generator(gp_node)      # Initialize the GP node generator
+        # <FOR> ::= FOR <variable_l_scalar> <FOR_operand> <FOR_to> <FOR_operand>
+        # TODO: support for FOR variants with different optional parts
+
+        # Grab FOR and the control variable
+        for child in self.gp_children:
+            if child.matches('<FOR_operand>'):
+                break
+            child_content = child.render(factory)
+            if child_content:
+                self.node_text.append(child_content)
+
+        self.node_text.append('&#60;-')      # Inject the <-
+        self.node_text.append(child.render(factory))    # Tack on the 1st operand
+
+        # Collect the remaining control parts up to the start of the loop contents
+        for child in self.gp_children:
+            if child.matches('<statement_list>'):
+                break
+            child_content = child.render(factory)
+            if child_content:
+                self.node_text.append(child_content)
+
+        self.open()     # Output FOR statement with the current contents of node_text
+
+        self.node_text = [child.render(factory)]  # Restart with the first statement_list
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
 class WhileNode(Statement):
     """
-    Shell of the WHILE statement
+    WHILE statement outer XML element
     """
     def open(self):
         print('<while text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
@@ -142,7 +195,7 @@ class WhileNode(Statement):
 
 class AlternativeNode(Statement):
     """
-    Shell of the IF statement
+    IF statement outer XML element
     """
 
     # Problem: logical expression starts at the same level as IF

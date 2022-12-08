@@ -36,6 +36,7 @@ class StatementFactory:
         'DEFINE_DATA': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
         'FIND_with_loop': nodes.WhileNode,
+        'FOR': nodes.ForNode,
         'IF_closed': nodes.AlternativeNode,
         'IF_open': nodes.AlternativeNode,
         'THEN_closed': nodes.AlternativeTrueNode,
