@@ -29,6 +29,7 @@ class StatementFactory:
 
     nodes = {
         'program': nodes.DiagramNode,
+        'ADD': nodes.InstructionNode,
         'ASSIGN': nodes.InstructionNode,
         'anon_ASSIGN': nodes.InstructionNode,
         'DEFINE_DATA': nodes.InstructionNode,
@@ -45,6 +46,8 @@ class StatementFactory:
         'MOVE': nodes.InstructionNode,
 #        'REDEFINE': nodes.InstructionNode,
         'RESET': nodes.InstructionNode,
+        'SUBTRACT': nodes.InstructionNode,
+        'UPDATE': nodes.InstructionNode,        # TODO: place assignments on separate lines
         'END': nodes.InstructionNode
     }
 
