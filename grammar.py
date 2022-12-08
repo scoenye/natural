@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
+import re
 from abc import ABC, abstractmethod
 
 
@@ -37,6 +37,18 @@ class GrammarNode(ABC):
         :param factory: diagram node factory class
         :return:
         """
+
+    def matches(self, lvalue):
+        """
+        Check if the left side of the expression is a match to the
+        supplied text.
+        :param lvalue: text to match
+        :return: True if the expression matches, False if not
+        """
+        if self.expression.startswith(lvalue):
+            return True
+        else:
+            return False
 
 
 class ExpressionNode(GrammarNode):

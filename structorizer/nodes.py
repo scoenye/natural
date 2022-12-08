@@ -108,8 +108,28 @@ class WhileNode(Statement):
         print('</while>')
 
     def render(self, factory, gp_node):
-        # FIXME: Similar issues as AlternativeNode, but worse as FIND has a million optional statement.
-        self.open()
+        """
+        Natural database statements are represented with WHILE nodes.
+        The header has many optional clauses but the loop contents
+        start with a loop_statement_list expression. This implementation
+        collects and renders all clauses up to the statement list as the
+        text of the WHILE node.
+        :param factory:
+        :param gp_node:
+        :return:
+        """
+        self._prime_generator(gp_node)
+
+        # Roll up everything until <loop_statement_list> is encountered? That one is always present.
+        # TODO: evaluate with an empty loop
+        for child in self.gp_children:
+            if child.matches('<loop_statement_list>'):
+                break
+            self.node_text.append(child.render(factory))
+
+        self.open()     # Output loop statement with the current contents of node_text
+
+        self.node_text = [child.render(factory)]    # Restart with the first loop_statement_list
         super().render(factory, gp_node)
         self.close()
 
