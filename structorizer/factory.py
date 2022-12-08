@@ -35,7 +35,7 @@ class StatementFactory:
         'CALLNAT': nodes.CallNode,
         'DEFINE_DATA': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
-        'FIND_with_loop': nodes.WhileNode,
+        'FIND_with_loop': nodes.DatabaseLoop,
         'FOR': nodes.ForNode,
         'IF_closed': nodes.AlternativeNode,
         'IF_open': nodes.AlternativeNode,
@@ -50,8 +50,8 @@ class StatementFactory:
 #        'REDEFINE': nodes.InstructionNode,
         'RESET': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
-        'STORE': nodes.InstructionNode,         # TODO: place assignments on separate lines
-        'UPDATE': nodes.InstructionNode,        # TODO: place assignments on separate lines
+        'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
+        'UPDATE': nodes.DatabaseInstruction,        # TODO: place assignments on separate lines
         'END': nodes.InstructionNode
     }
 

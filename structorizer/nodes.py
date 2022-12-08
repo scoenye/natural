@@ -197,6 +197,10 @@ class WhileNode(Statement):
         return ''       # The node text has been printed so we return an empty string
 
 
+class DatabaseLoop(WhileNode):
+    color = '80ff80'        # Green
+
+
 class AlternativeNode(Statement):
     """
     IF statement outer XML element
@@ -280,7 +284,7 @@ class InstructionNode(Statement):
     """
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
-        print('<instruction text="&#34;{}&#34;" comment="" color="{color}" rotated="0" disabled="0">'
+        print('<instruction text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</instruction>'.format(' '.join(self.node_text), color=self.color))
 
     def render(self, factory, gp_node):
@@ -299,3 +303,7 @@ class CallNode(InstructionNode):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</call>'.format(' '.join(self.node_text), color=self.color))
+
+
+class DatabaseInstruction(InstructionNode):
+    color = '80ff80'        # Green
