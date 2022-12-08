@@ -45,9 +45,11 @@ class StatementFactory:
         'IGNORE': nodes.InstructionNode,
         'INCLUDE': nodes.InstructionNode,
         'MOVE': nodes.InstructionNode,
+        'PERFORM': nodes.CallNode,
 #        'REDEFINE': nodes.InstructionNode,
         'RESET': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
+        'STORE': nodes.InstructionNode,         # TODO: place assignments on separate lines
         'UPDATE': nodes.InstructionNode,        # TODO: place assignments on separate lines
         'END': nodes.InstructionNode
     }
