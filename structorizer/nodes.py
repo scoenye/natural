@@ -21,6 +21,8 @@ from datetime import date
 
 
 class Statement:
+    color = 'ffffff'
+
     def __init__(self):
         self.node_text = []
         self.gp_children = None
@@ -82,7 +84,9 @@ class DiagramNode(Statement):
               'output="OUTPUT" input="INPUT" preFor="for" preExit="exit" preLeave="leave" ignoreCase="true" '
               'preThrow="throw" preForIn="foreach" stepFor="by" author="sven" created="{}" '
               'changedby="" changed="" origin="GPStruct" '
-              'text="{}" comment="" color="ffffff" type="program" style="nice">'.format(today, 'PROGRAM'))
+              'text="{}" comment="" color="{color}" type="program" style="nice">'.format(today,
+                                                                                         'PROGRAM',
+                                                                                         color=self.color))
         print('  <children>')
 
     def close(self):
@@ -103,7 +107,7 @@ class ForNode(Statement):
     """
     def open(self):
         # for uses &#60; (less than) to separate the loop variable from the values
-        print('<for text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+        print('<for text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
         print('  <qFor>')
 
     def close(self):
@@ -155,7 +159,7 @@ class WhileNode(Statement):
     WHILE statement outer XML element
     """
     def open(self):
-        print('<while text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+        print('<while text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
         print('  <qWhile>')
 
     def close(self):
@@ -200,7 +204,7 @@ class AlternativeNode(Statement):
 
     # Problem: logical expression starts at the same level as IF
     def open(self):
-        print('<alternative text="{}" comment="" color="ffffff">'.format(' '.join(self.node_text)))
+        print('<alternative text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
 
     def close(self):
         print('</alternative>')
@@ -276,8 +280,8 @@ class InstructionNode(Statement):
     """
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
-        print('<instruction text="&#34;{}&#34;" comment="" color="ffffff" rotated="0" disabled="0">'
-              '</instruction>'.format(' '.join(self.node_text)))
+        print('<instruction text="&#34;{}&#34;" comment="" color="{color}" rotated="0" disabled="0">'
+              '</instruction>'.format(' '.join(self.node_text), color=self.color))
 
     def render(self, factory, gp_node):
         super().render(factory, gp_node)
@@ -293,5 +297,5 @@ class CallNode(InstructionNode):
     """
     def open(self):
         # Calls contain no other elements so the closing tag is included.
-        print('<call text="{}" comment="" color="ffffff" rotated="0" disabled="0">'
-              '</call>'.format(' '.join(self.node_text)))
+        print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
+              '</call>'.format(' '.join(self.node_text), color=self.color))
