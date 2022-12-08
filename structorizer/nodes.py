@@ -231,3 +231,14 @@ class InstructionNode(Statement):
         self.open()
 
         return ''       # The node text has been printed so we return an empty string
+
+
+class CallNode(InstructionNode):
+    """
+    Node for subroutine calls. It is a non-container instruction with
+    a distinct rendering.
+    """
+    def open(self):
+        # Calls contain no other elements so the closing tag is included.
+        print('<call text="{}" comment="" color="ffffff" rotated="0" disabled="0">'
+              '</call>'.format(' '.join(self.node_text)))

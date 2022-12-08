@@ -32,6 +32,7 @@ class StatementFactory:
         'ADD': nodes.InstructionNode,
         'ASSIGN': nodes.InstructionNode,
         'anon_ASSIGN': nodes.InstructionNode,
+        'CALLNAT': nodes.CallNode,
         'DEFINE_DATA': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
         'FIND_with_loop': nodes.WhileNode,
