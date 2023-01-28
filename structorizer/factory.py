@@ -51,6 +51,7 @@ class StatementFactory:
         'INCLUDE': nodes.InstructionNode,
         'MOVE': nodes.InstructionNode,
         'PERFORM': nodes.CallNode,
+        'READ': nodes.DatabaseLoop,
 #        'REDEFINE': nodes.InstructionNode,
         'REPEAT': nodes.ForeverNode,
         'RESET': nodes.InstructionNode,
