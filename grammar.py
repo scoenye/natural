@@ -105,6 +105,14 @@ class TerminalNode(GrammarNode):
     GP grammar node to hold terminals. TerminalNodes are leaf nodes.
     """
 
+    # Things that break XML
+    entities = str.maketrans({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;'
+    })
+
     def add_node(self, level, child):
         """
         TerminalNodes do not have child nodes.
@@ -116,8 +124,8 @@ class TerminalNode(GrammarNode):
 
     def render(self, factory):
         """
-        A TerminalNode returns its keyword
+        A TerminalNode returns its keyword as an XML-safe string
         :param factory: diagram node factory class
         :return:
         """
-        return self.expression
+        return self.expression.translate(TerminalNode.entities)

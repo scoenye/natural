@@ -98,7 +98,7 @@ class DiagramNode(Statement):
         super().render(factory, gp_node)
         self.close()
 
-        return ''       # The node text has been printed so we return an empty string
+        return ''       # The node text has been printed, so we return an empty string
 
 
 class ForNode(Statement):
