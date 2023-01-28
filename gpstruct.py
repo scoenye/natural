@@ -50,7 +50,7 @@ class GPStruct:
             if line.strip() == '':      # strip because line endings
                 break
 
-        parts = self._split_line(gp_file.readline().strip())
+        parts = self._split_line(gp_file.readline().strip())        # Normally the <program> line
 
         # The first line should be at level 0. If not, we punt.
         if parts[0] != 0:
@@ -71,13 +71,14 @@ class GPStruct:
 
                     parts = self._split_line(line)      # Break up in level and expression
 
-                    if parts[1][0] != '<':      # line contains a terminal
+                    # line contains a terminal if it starts with <, but just < means 'less than'
+                    if parts[1][0] != '<' or parts[1] == '<':
                         new_node = TerminalNode(parts[0], parts[1])
                         last_node.add_node(parts[0], new_node)
                     else:
                         new_node = ExpressionNode(parts[0], parts[1])
                         last_node.add_node(parts[0], new_node)
-                        last_node = new_node
+                        last_node = new_node    # Descend to the next level
 
     def render(self, factory):
         """
