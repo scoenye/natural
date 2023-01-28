@@ -52,6 +52,7 @@ class StatementFactory:
         'MOVE': nodes.InstructionNode,
         'PERFORM': nodes.CallNode,
 #        'REDEFINE': nodes.InstructionNode,
+        'REPEAT': nodes.ForeverNode,
         'RESET': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
         'SET_KEY': nodes.InstructionNode,

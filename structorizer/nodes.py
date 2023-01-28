@@ -154,6 +154,33 @@ class ForNode(Statement):
         return ''       # The node text has been printed so we return an empty string
 
 
+class ForeverNode(Statement):
+    """
+    FOREVER statement outer XML element
+    """
+    def open(self):
+        print('<forever comment="" color="{color}">'.format(color=self.color))
+        print('  <qForever>')
+
+    def close(self):
+        print('  </qForever>')
+        print('</forever>')
+
+    def render(self, factory, gp_node):
+        """
+        REPEAT has no options. The loop instructions start with a
+        loop_statement_list expression.
+        :param factory:
+        :param gp_node:
+        :return:
+        """
+        self.open()     # Output loop statement with the current contents of node_text
+        super().render(factory, gp_node)
+        self.close()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
 class WhileNode(Statement):
     """
     WHILE statement outer XML element
@@ -188,7 +215,7 @@ class WhileNode(Statement):
             if child_content:
                 self.node_text.append(child_content)
 
-        self.open()     # Output loop statement with the current contents of node_text
+        self.open()     # Output FOREVER statement with the current contents of node_text
 
         self.node_text = [child.render(factory)]    # Restart with the first loop_statement_list
         super().render(factory, gp_node)
