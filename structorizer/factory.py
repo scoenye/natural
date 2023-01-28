@@ -33,12 +33,16 @@ class StatementFactory:
         'ASSIGN': nodes.InstructionNode,
         'anon_ASSIGN': nodes.InstructionNode,
         'CALLNAT': nodes.CallNode,
+        'COMPRESS': nodes.InstructionNode,
         'DEFINE_DATA': nodes.InstructionNode,
+        'DEFINE_WINDOW': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
         'FIND_with_loop': nodes.DatabaseLoop,
         'FOR': nodes.ForNode,
+        'GET': nodes.DatabaseInstruction,
         'IF_closed': nodes.AlternativeNode,
         'IF_open': nodes.AlternativeNode,
+        'INPUT': nodes.InstructionNode,
         'THEN_closed': nodes.AlternativeTrueNode,
         'THEN_open': nodes.AlternativeTrueNode,
         'ELSE_closed': nodes.AlternativeFalseNode,
@@ -50,6 +54,7 @@ class StatementFactory:
 #        'REDEFINE': nodes.InstructionNode,
         'RESET': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
+        'SET_KEY': nodes.InstructionNode,
         'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
         'UPDATE': nodes.DatabaseInstruction,        # TODO: place assignments on separate lines
         'END': nodes.InstructionNode
