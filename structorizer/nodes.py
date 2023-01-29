@@ -101,6 +101,24 @@ class DiagramNode(Statement):
         return ''       # The node text has been printed, so we return an empty string
 
 
+class ExitNode(Statement):
+    """
+    Structorizer Exit node
+    """
+    color = 'ffff80'
+
+    def open(self):
+        # Instructions contain no other elements so the closing tag is included.
+        print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
+              '</jump>'.format(' '.join(self.node_text), color=self.color))
+
+    def render(self, factory, gp_node):
+        super().render(factory, gp_node)
+        self.open()
+
+        return ''       # The node text has been printed so we return an empty string
+
+
 class ForNode(Statement):
     """
     FOR statement outer XML element
