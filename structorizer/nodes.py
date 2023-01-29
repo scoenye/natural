@@ -141,12 +141,18 @@ class ForNode(Statement):
         :return:
         """
         self._prime_generator(gp_node)      # Initialize the GP node generator
-        # <FOR> ::= FOR <variable_l_scalar> <FOR_operand> <FOR_to> <FOR_operand>
+        # <FOR> ::= FOR <variable_l_scalar> <FOR_from> <FOR_to> <FOR_operand>
         # TODO: support for FOR variants with different optional parts
+
+        # Untrimmed tree contains variable_l_scalar, FOR_from, FOR_to and statement_list
+        # Trimmed version may only have the final types of the three loop control fields
+        # and may not have an explicit statement_list.
+        # -> first child after FOR is the loop variable, 2nd is the starting value, 3rd
+        # is the end value.
 
         # Grab FOR and the control variable
         for child in self.gp_children:
-            if child.matches('<FOR_operand>'):
+            if child.matches('<FOR_from>'):
                 break
             child_content = child.render(factory)
             if child_content:
