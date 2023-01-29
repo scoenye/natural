@@ -142,7 +142,6 @@ class ForNode(Statement):
         """
         self._prime_generator(gp_node)      # Initialize the GP node generator
         # <FOR> ::= FOR <variable_l_scalar> <FOR_from> <FOR_to> <FOR_operand>
-        # TODO: support for FOR variants with different optional parts
 
         # Untrimmed tree contains variable_l_scalar, FOR_from, FOR_to and statement_list
         # Trimmed version may only have the final types of the three loop control fields
@@ -150,24 +149,21 @@ class ForNode(Statement):
         # -> first child after FOR is the loop variable, 2nd is the starting value, 3rd
         # is the end value.
 
-        # Grab FOR and the control variable
-        for child in self.gp_children:
-            if child.matches('<FOR_from>'):
-                break
-            child_content = child.render(factory)
-            if child_content:
-                self.node_text.append(child_content)
+        child = next(self.gp_children)      # FOR terminal
+        self.node_text.append(child.render(factory))
 
-        self.node_text.append('&#60;-')      # Inject the <-
-        self.node_text.append(child.render(factory))    # Tack on the 1st operand
+        child = next(self.gp_children)      # loop variable
+        self.node_text.append(child.render(factory))
 
-        # Collect the remaining control parts up to the start of the loop contents
-        for child in self.gp_children:
-            if child.matches('<statement_list>'):
-                break
-            child_content = child.render(factory)
-            if child_content:
-                self.node_text.append(child_content)
+        self.node_text.append('&#60;-')     # Inject the <-
+
+        child = next(self.gp_children)      # start value
+        self.node_text.append(child.render(factory))
+
+        child = next(self.gp_children)      # end value
+        self.node_text.append(child.render(factory))
+
+        # TODO: handle step
 
         self.open()     # Output FOR statement with the current contents of node_text
 
