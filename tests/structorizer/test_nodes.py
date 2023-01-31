@@ -22,7 +22,7 @@ import unittest
 from structorizer.nodes import InstructionNode
 from structorizer.factory import StatementFactory
 
-from grammar import ExpressionNode, TerminalNode
+from goldparser.grammar import ExpressionNode, TerminalNode
 
 
 class InstructionNodeTest(unittest.TestCase):
@@ -33,8 +33,8 @@ class InstructionNodeTest(unittest.TestCase):
         gp_node = ExpressionNode(0, '<DEFINE_DATA> ::=')
         gp_node.add_node(1, TerminalNode(1, 'TEST'))
 
-        content = self.diagram_node.render(StatementFactory, gp_node)
-        self.assertEqual(['TEST'], content)
+        self.diagram_node.render(StatementFactory, gp_node)
+        self.assertEqual(['TEST'], self.diagram_node.node_text['instruction'])
 
 
 if __name__ == '__main__':

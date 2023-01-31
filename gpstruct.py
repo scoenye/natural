@@ -22,7 +22,7 @@
 import argparse
 import sys
 
-from grammar import ExpressionNode, TerminalNode
+from goldparser.grammar import ExpressionNode, TerminalNode
 from structorizer.factory import StatementFactory
 
 

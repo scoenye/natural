@@ -21,7 +21,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-from grammar import ExpressionNode, TerminalNode
+from goldparser.grammar import ExpressionNode, TerminalNode
 from structorizer.factory import StatementFactory
 
 
@@ -32,7 +32,8 @@ class ExpressionNodeTest(unittest.TestCase):
         self.node.add_node(1, TerminalNode(1, 'TEST'))
 
     def test_render(self):
-        self.assertEqual(['TEST'], self.node.render(self.factory, None))
+        # ExpressionNode renders to the screen so there is nothing to return.
+        self.assertEqual('', self.node.render(self.factory, None))
 
 
 class TerminalNodeTest(unittest.TestCase):
