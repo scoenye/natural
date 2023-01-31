@@ -45,6 +45,19 @@ class Statement:
         """
         pass
 
+    def add_text(self, field, text):
+        """
+        Attempt to add the text for a field. If the node does not know
+        the field, it is passed up to the parent.
+        :param field: name of the field to set the text for
+        :param text: text to add
+        :return:
+        """
+        if self.node_text.get(field) is not None:
+            self.node_text[field].append(text)
+        else:
+            self.parent.add_text(field, text)
+
     def _prime_generator(self, gp_node):
         # Removing retrieval of the generator from the render method makes
         # reuse by overriding descendants possible.
@@ -54,7 +67,7 @@ class Statement:
     def render(self, factory, gp_node):
         """
         Collect the entities that make up the grammar node. A Statement
-        is created for each expression as processing descends down the
+        is created for each expression as processing descends the
         grammar tree. When the lowest level is reached, all terminals
         are joined and returned as the outcome of the statement. This
         repeats as execution ascends back up the grammar tree, leading
@@ -68,7 +81,7 @@ class Statement:
         for child in self.gp_children:
             child_content = child.render(factory, self)
             if child_content:
-                self.node_text['instruction'].append(child_content)
+                self.add_text('instruction', child_content)
 
         return ' '.join(self.node_text['instruction'])
 
@@ -155,18 +168,18 @@ class ForNode(Statement):
         # is the end value.
 
         child = next(self.gp_children)      # FOR terminal
-        self.node_text['instruction'].append(child.render(factory, self))
+        self.add_text('instruction', child.render(factory, self))
 
         child = next(self.gp_children)      # loop variable
-        self.node_text['instruction'].append(child.render(factory, self))
+        self.add_text('instruction', child.render(factory, self))
 
-        self.node_text['instruction'].append('&#60;-')     # Inject the <-
+        self.add_text('instruction', '&#60;-')     # Inject the <-
 
         child = next(self.gp_children)      # start value
-        self.node_text['instruction'].append(child.render(factory, self))
+        self.add_text('instruction', child.render(factory, self))
 
         child = next(self.gp_children)      # end value
-        self.node_text['instruction'].append(child.render(factory, self))
+        self.add_text('instruction', child.render(factory, self))
 
         # TODO: handle step
 
@@ -239,7 +252,7 @@ class WhileNode(Statement):
                 break
             child_content = child.render(factory, self)
             if child_content:
-                self.node_text['instruction'].append(child_content)
+                self.add_text('instruction', child_content)
 
         self.open()     # Output FOREVER statement with the current contents of node_text
 
