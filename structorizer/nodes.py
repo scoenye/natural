@@ -27,7 +27,9 @@ class Statement:
         self.parent = parent
         self.gp_children = None
 
-        self.node_text = []
+        self.node_text = {
+            'instruction': []
+        }
 
     def open(self):
         """
@@ -66,9 +68,9 @@ class Statement:
         for child in self.gp_children:
             child_content = child.render(factory, self)
             if child_content:
-                self.node_text.append(child_content)
+                self.node_text['instruction'].append(child_content)
 
-        return ' '.join(self.node_text)
+        return ' '.join(self.node_text['instruction'])
 
 
 class DiagramNode(Statement):
@@ -112,7 +114,7 @@ class ExitNode(Statement):
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</jump>'.format(' '.join(self.node_text), color=self.color))
+              '</jump>'.format(' '.join(self.node_text['instruction']), color=self.color))
 
     def render(self, factory, gp_node):
         super().render(factory, gp_node)
@@ -127,7 +129,8 @@ class ForNode(Statement):
     """
     def open(self):
         # for uses &#60; (less than) to separate the loop variable from the values
-        print('<for text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
+        print('<for text="{}" comment="" color="{color}">'.format(
+            ' '.join(self.node_text['instruction']), color=self.color))
         print('  <qFor>')
 
     def close(self):
@@ -152,24 +155,24 @@ class ForNode(Statement):
         # is the end value.
 
         child = next(self.gp_children)      # FOR terminal
-        self.node_text.append(child.render(factory))
+        self.node_text['instruction'].append(child.render(factory, self))
 
         child = next(self.gp_children)      # loop variable
-        self.node_text.append(child.render(factory))
+        self.node_text['instruction'].append(child.render(factory, self))
 
-        self.node_text.append('&#60;-')     # Inject the <-
+        self.node_text['instruction'].append('&#60;-')     # Inject the <-
 
         child = next(self.gp_children)      # start value
-        self.node_text.append(child.render(factory))
+        self.node_text['instruction'].append(child.render(factory, self))
 
         child = next(self.gp_children)      # end value
-        self.node_text.append(child.render(factory))
+        self.node_text['instruction'].append(child.render(factory, self))
 
         # TODO: handle step
 
         self.open()     # Output FOR statement with the current contents of node_text
 
-        self.node_text = [child.render(factory)]  # Restart with the first statement_list
+        self.node_text['instruction'] = [child.render(factory, self)]  # Restart with the first statement_list
         super().render(factory, gp_node)
         self.close()
 
@@ -208,7 +211,8 @@ class WhileNode(Statement):
     WHILE statement outer XML element
     """
     def open(self):
-        print('<while text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
+        print('<while text="{}" comment="" color="{color}">'.format(
+            ' '.join(self.node_text['instruction']), color=self.color))
         print('  <qWhile>')
 
     def close(self):
@@ -235,11 +239,11 @@ class WhileNode(Statement):
                 break
             child_content = child.render(factory, self)
             if child_content:
-                self.node_text.append(child_content)
+                self.node_text['instruction'].append(child_content)
 
         self.open()     # Output FOREVER statement with the current contents of node_text
 
-        self.node_text = [child.render(factory)]    # Restart with the first loop_statement_list
+        self.node_text['instruction'] = [child.render(factory, self)]    # Restart with the first loop_statement_list
         super().render(factory, gp_node)
         self.close()
 
@@ -257,7 +261,8 @@ class AlternativeNode(Statement):
 
     # Problem: logical expression starts at the same level as IF
     def open(self):
-        print('<alternative text="{}" comment="" color="{color}">'.format(' '.join(self.node_text), color=self.color))
+        print('<alternative text="{}" comment="" color="{color}">'.format(
+            ' '.join(self.node_text['instruction']), color=self.color))
 
     def close(self):
         print('</alternative>')
@@ -273,15 +278,15 @@ class AlternativeNode(Statement):
         # Collect the <IF> expression - contains the IF terminal
         expression = next(self.gp_children)
         # Although not necessary, keep node_text a list in order to maintain consistency
-        self.node_text = [expression.render(factory)]
+        self.node_text['instruction'] = [expression.render(factory, self)]
 
         # This is (should be...) the logical expression.
         expression = next(self.gp_children)
-        self.node_text = [expression.render(factory)]   # list for consistency
+        self.node_text['instruction'] = [expression.render(factory, self)]   # list for consistency
 
         self.open()                             # This embeds the expression in the element open statement
 
-        self.node_text = []                     # Start over for the qTrue/qFalse branches
+        self.node_text['instruction'] = []      # Start over for the qTrue/qFalse branches
         super().render(factory, gp_node)        # Process remaining gp_node children
 
         self.close()
@@ -334,7 +339,7 @@ class InstructionNode(Statement):
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<instruction text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</instruction>'.format(' '.join(self.node_text), color=self.color))
+              '</instruction>'.format(' '.join(self.node_text['instruction']), color=self.color))
 
     def render(self, factory, gp_node):
         super().render(factory, gp_node)
@@ -351,7 +356,7 @@ class CallNode(InstructionNode):
     def open(self):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</call>'.format(' '.join(self.node_text), color=self.color))
+              '</call>'.format(' '.join(self.node_text['instruction']), color=self.color))
 
 
 class DatabaseInstruction(InstructionNode):
