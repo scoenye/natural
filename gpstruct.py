@@ -89,7 +89,7 @@ class GPStruct:
 
     def render(self, factory):
         """
-        Render the parsed GP file as Structurizer XML
+        Render the parsed GP file as Structorizer XML
         :param factory: Diagram element factory
         :return:
         """

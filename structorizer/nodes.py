@@ -140,10 +140,22 @@ class ForNode(Statement):
     """
     FOR statement outer XML element
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['for_control'] = []
+        self.node_text['for_from'] = []
+        self.node_text['for_to'] = []
+
     def open(self):
         # for uses &#60; (less than) to separate the loop variable from the values
-        print('<for text="{}" comment="" color="{color}">'.format(
-            ' '.join(self.node_text['instruction']), color=self.color))
+        print('<for text="{instruction} {for_control} &#60;- {for_from} {for_to}" comment="" color="{color}">'.format(
+            instruction=' '.join(self.node_text['instruction']),
+            for_control=' '.join(self.node_text['for_control']),
+            for_from=' '.join(self.node_text['for_from']),
+            for_to=' '.join(self.node_text['for_to']),
+            color=self.color))
         print('  <qFor>')
 
     def close(self):
@@ -171,15 +183,13 @@ class ForNode(Statement):
         self.add_text('instruction', child.render(factory, self))
 
         child = next(self.gp_children)      # loop variable
-        self.add_text('instruction', child.render(factory, self))
-
-        self.add_text('instruction', '&#60;-')     # Inject the <-
+        self.add_text('for_control', child.render(factory, self))
 
         child = next(self.gp_children)      # start value
-        self.add_text('instruction', child.render(factory, self))
+        self.add_text('for_from', child.render(factory, self))
 
         child = next(self.gp_children)      # end value
-        self.add_text('instruction', child.render(factory, self))
+        self.add_text('for_to', child.render(factory, self))
 
         # TODO: handle step
 
@@ -189,7 +199,7 @@ class ForNode(Statement):
         super().render(factory, gp_node)
         self.close()
 
-        return ''       # The node text has been printed so we return an empty string
+        return ''       # The node text has been printed, so we return an empty string
 
 
 class ForeverNode(Statement):
