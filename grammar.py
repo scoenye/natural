@@ -31,10 +31,11 @@ class GrammarNode(ABC):
         self.parent = None      # Node immediately above this node
 
     @abstractmethod
-    def render(self, factory):
+    def render(self, factory, parent):
         """
         Produce diagram contents for the grammar node
         :param factory: diagram node factory class
+        :param parent: diagram node immediately above
         :return:
         """
 
@@ -86,15 +87,16 @@ class ExpressionNode(GrammarNode):
         """
         yield from self.children
 
-    def render(self, factory):
+    def render(self, factory, parent):
         """
         Produce a diagram node for this expression
-        :param factory:
+        :param parent: diagram Statement immediately above
+        :param factory: diagram node factory class
         :return:
         """
         lvalue = self.expression.split('::=')[0]
 
-        renderer = factory.node(lvalue)
+        renderer = factory.node(lvalue, parent)
         content = renderer.render(factory, self)
 
         return content
@@ -122,9 +124,10 @@ class TerminalNode(GrammarNode):
         """
         pass
 
-    def render(self, factory):
+    def render(self, factory, parent):
         """
         A TerminalNode returns its keyword as an XML-safe string
+        :param parent: diagram Statement immediately above
         :param factory: diagram node factory class
         :return:
         """

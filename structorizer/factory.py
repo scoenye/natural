@@ -64,11 +64,12 @@ class StatementFactory:
     }
 
     @staticmethod
-    def node(gp_part):
+    def node(gp_part, parent):
         """
         Produce a TreeNode for a GP instruction. If no matching
         node can be found, an instruction node is returned.
         :param gp_part:
+        :param parent: diagram node above the node being created
         :return:
         """
         lvalue = StatementFactory.expression_l.match(gp_part)
@@ -76,6 +77,6 @@ class StatementFactory:
         temp_node = StatementFactory.nodes.get(lvalue.group(1))
 
         if temp_node is None:
-            return nodes.Statement()    # The null renderer
+            return nodes.Statement(parent)    # The null renderer
         else:
-            return temp_node()
+            return temp_node(parent)

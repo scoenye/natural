@@ -23,9 +23,11 @@ from datetime import date
 class Statement:
     color = 'ffffff'
 
-    def __init__(self):
-        self.node_text = []
+    def __init__(self, parent):
+        self.parent = parent
         self.gp_children = None
+
+        self.node_text = []
 
     def open(self):
         """
@@ -55,14 +57,14 @@ class Statement:
         are joined and returned as the outcome of the statement. This
         repeats as execution ascends back up the grammar tree, leading
         to a single line of text for gp_node.
-        :param factory:
-        :param gp_node:
+        :param factory: Statement generator
+        :param gp_node: GoldParser grammar node text
         :return:
         """
         self._prime_generator(gp_node)
 
         for child in self.gp_children:
-            child_content = child.render(factory)
+            child_content = child.render(factory, self)
             if child_content:
                 self.node_text.append(child_content)
 
@@ -231,7 +233,7 @@ class WhileNode(Statement):
         for child in self.gp_children:
             if child.matches('<loop_statement_list>'):
                 break
-            child_content = child.render(factory)
+            child_content = child.render(factory, self)
             if child_content:
                 self.node_text.append(child_content)
 

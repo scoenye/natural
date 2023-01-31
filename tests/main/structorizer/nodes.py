@@ -27,7 +27,7 @@ from grammar import ExpressionNode, TerminalNode
 
 class InstructionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.diagram_node = InstructionNode()
+        self.diagram_node = InstructionNode(None)
 
     def test_(self):
         gp_node = ExpressionNode(0, '<DEFINE_DATA> ::=')

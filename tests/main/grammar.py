@@ -32,7 +32,7 @@ class ExpressionNodeTest(unittest.TestCase):
         self.node.add_node(1, TerminalNode(1, 'TEST'))
 
     def test_render(self):
-        self.assertEqual(['TEST'], self.node.render(self.factory))
+        self.assertEqual(['TEST'], self.node.render(self.factory, None))
 
 
 class TerminalNodeTest(unittest.TestCase):
@@ -41,7 +41,7 @@ class TerminalNodeTest(unittest.TestCase):
         self.node = TerminalNode(0, 'TEST')
 
     def test_render(self):
-        self.assertEqual('TEST', self.node.render(self.factory))
+        self.assertEqual('TEST', self.node.render(self.factory, None))
 
 
 if __name__ == '__main__':

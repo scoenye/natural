@@ -38,12 +38,19 @@ class GPStruct:
     @staticmethod
     def _split_line(line):
         # Each line has a level part and an expression part, separated by +--
+        # Split the line on the +-- and replace the vertical bars with the bar count.
         parts = line.split('+--', maxsplit=1)  # In case the definition contains an expression
         parts[0] = parts[0].count('|')  # Replace tree level string with the equivalent number
 
         return parts
 
     def parse(self, gp_file):
+        """
+        Process a GoldParser grammar tree export file. The result is a
+        tree made of GrammarNodes.
+        :param gp_file:
+        :return:
+        """
         # Parse tree files have two sections, each with a header. The header and section
         # are separated by a blank line.
         for line in gp_file:            # Skip the Parse Tree header
@@ -86,7 +93,7 @@ class GPStruct:
         :param factory: Diagram element factory
         :return:
         """
-        diagram = self.root.render(factory)
+        diagram = self.root.render(factory, None)
         print(diagram)
 
 
