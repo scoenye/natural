@@ -19,6 +19,7 @@
 
 import unittest
 
+from goldparser import grammar
 from structorizer.factory import StatementFactory as Factory
 from structorizer import nodes
 
@@ -28,97 +29,128 @@ class StatementFactoryTest(unittest.TestCase):
         self.assertIsInstance(Factory.terminal(None, None), nodes.DiagramTerminal)
 
     def test_program(self):
-        self.assertIsInstance(Factory.node('<program>', None, None), nodes.DiagramNode)
+        gp_node = grammar.ExpressionNode(0, '<program>')
+        self.assertIsInstance(Factory.node(gp_node, None), nodes.DiagramNode)
 
     def test_add(self):
-        self.assertIsInstance(Factory.node('<ADD>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<ADD>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_assign(self):
-        self.assertIsInstance(Factory.node('<ASSIGN>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<ASSIGN>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_anon_assign(self):
-        self.assertIsInstance(Factory.node('<anon_ASSIGN>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<anon_ASSIGN>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_callnat(self):
-        self.assertIsInstance(Factory.node('<CALLNAT>', None, None),  nodes.CallNode)
+        gp_node = grammar.ExpressionNode(1, '<CALLNAT>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.CallNode)
 
     def test_compress(self):
-        self.assertIsInstance(Factory.node('<COMPRESS>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<COMPRESS>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_define_data(self):
-        self.assertIsInstance(Factory.node('<DEFINE_DATA>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<DEFINE_DATA>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_define_window(self):
-        self.assertIsInstance(Factory.node('<DEFINE_WINDOW>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<DEFINE_WINDOW>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_escape(self):
-        self.assertIsInstance(Factory.node('<ESCAPE>', None, None),  nodes.ExitNode)
+        gp_node = grammar.ExpressionNode(1, '<ESCAPE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.ExitNode)
 
     def test_find_with_loop(self):
-        self.assertIsInstance(Factory.node('<FIND_with_loop>', None, None),  nodes.DatabaseLoop)
+        gp_node = grammar.ExpressionNode(1, '<FIND_with_loop>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseLoop)
 
     def test_for(self):
-        self.assertIsInstance(Factory.node('<FOR>', None, None),  nodes.ForNode)
+        gp_node = grammar.ExpressionNode(1, '<FOR>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.ForNode)
 
     def test_get(self):
-        self.assertIsInstance(Factory.node('<GET>', None, None),  nodes.DatabaseInstruction)
+        gp_node = grammar.ExpressionNode(1, '<GET>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
 
     def test_if_closed(self):
-        self.assertIsInstance(Factory.node('<IF_closed>', None, None),  nodes.AlternativeNode)
+        gp_node = grammar.ExpressionNode(1, '<IF_closed>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeNode)
 
     def test_if_open(self):
-        self.assertIsInstance(Factory.node('<IF_open>', None, None),  nodes.AlternativeNode)
+        gp_node = grammar.ExpressionNode(1, '<IF_open>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeNode)
 
     def test_input(self):
-        self.assertIsInstance(Factory.node('<INPUT>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<INPUT>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_then_closed(self):
-        self.assertIsInstance(Factory.node('<THEN_closed>', None, None),  nodes.AlternativeTrueNode)
+        gp_node = grammar.ExpressionNode(1, '<THEN_closed>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeTrueNode)
 
     def test_then_open(self):
-        self.assertIsInstance(Factory.node('<THEN_open>', None, None),  nodes.AlternativeTrueNode)
+        gp_node = grammar.ExpressionNode(1, '<THEN_open>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeTrueNode)
 
     def test_else_closed(self):
-        self.assertIsInstance(Factory.node('<ELSE_closed>', None, None),  nodes.AlternativeFalseNode)
+        gp_node = grammar.ExpressionNode(1, '<ELSE_closed>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeFalseNode)
 
     def test_else_open(self):
-        self.assertIsInstance(Factory.node('<ELSE_open>', None, None),  nodes.AlternativeFalseNode)
+        gp_node = grammar.ExpressionNode(1, '<ELSE_open>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.AlternativeFalseNode)
 
     def test_ignore(self):
-        self.assertIsInstance(Factory.node('<IGNORE>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<IGNORE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_include(self):
-        self.assertIsInstance(Factory.node('<INCLUDE>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<INCLUDE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_move(self):
-        self.assertIsInstance(Factory.node('<MOVE>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<MOVE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_perform(self):
-        self.assertIsInstance(Factory.node('<PERFORM>', None, None),  nodes.CallNode)
+        gp_node = grammar.ExpressionNode(1, '<PERFORM>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.CallNode)
 
     def test_read(self):
-        self.assertIsInstance(Factory.node('<READ>', None, None),  nodes.DatabaseLoop)
+        gp_node = grammar.ExpressionNode(1, '<READ>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseLoop)
 
     def test_repeat(self):
-        self.assertIsInstance(Factory.node('<REPEAT>', None, None),  nodes.ForeverNode)
+        gp_node = grammar.ExpressionNode(1, '<REPEAT>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.ForeverNode)
 
     def test_reset(self):
-        self.assertIsInstance(Factory.node('<RESET>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<RESET>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_subtract(self):
-        self.assertIsInstance(Factory.node('<SUBTRACT>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<SUBTRACT>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_set_key(self):
-        self.assertIsInstance(Factory.node('<SET_KEY>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<SET_KEY>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_store(self):
-        self.assertIsInstance(Factory.node('<STORE>', None, None),  nodes.DatabaseInstruction)
+        gp_node = grammar.ExpressionNode(1, '<STORE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
 
     def test_update(self):
-        self.assertIsInstance(Factory.node('<UPDATE>', None, None),  nodes.DatabaseInstruction)
+        gp_node = grammar.ExpressionNode(1, '<UPDATE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
 
     def test_end(self):
-        self.assertIsInstance(Factory.node('<END>', None, None),  nodes.InstructionNode)
+        gp_node = grammar.ExpressionNode(1, '<END>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
 
 if __name__ == '__main__':

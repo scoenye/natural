@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import re
 
 from structorizer import nodes
 
@@ -25,7 +24,6 @@ class StatementFactory:
     """
     Create a TreeNode for a GP parse tree instruction part
     """
-    expression_l = re.compile(r'<(.+)>')
 
     nodes = {
         'program': nodes.DiagramNode,
@@ -64,18 +62,15 @@ class StatementFactory:
     }
 
     @staticmethod
-    def node(gp_part, gp_node, parent):
+    def node(gp_node, parent):
         """
         Produce a diagram node for a GP instruction. If no matching
         node can be found, a base Statement node is returned.
-        :param gp_part:
         :param gp_node: GrammarNode to render
         :param parent: diagram node above the node being created
         :return:
         """
-        lvalue = StatementFactory.expression_l.match(gp_part)
-
-        temp_node = StatementFactory.nodes.get(lvalue.group(1))
+        temp_node = StatementFactory.nodes.get(gp_node.lvalue())
 
         if temp_node is None:
             return nodes.Statement(gp_node, parent)  # The null renderer

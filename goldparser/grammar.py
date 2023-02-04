@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import re
 
 from abc import ABC, abstractmethod
 
@@ -57,6 +58,7 @@ class ExpressionNode(GrammarNode):
     GP grammar node to hold an expression. ExpressionNodes may contain
     other GrammarNodes.
     """
+    expression_l = re.compile(r'<(.+)>')
 
     def __init__(self, level, expression):
         super().__init__(level, expression)
@@ -95,12 +97,17 @@ class ExpressionNode(GrammarNode):
         :return:
         """
         # Build our own Statement node
-        lvalue = self.expression.split('::=')[0]
-        statement = factory.node(lvalue, self, parent)
+        statement = factory.node(self, parent)
 
         statement.import_expressions(factory, self)
 
         return statement
+
+    def lvalue(self):
+        """
+        :return: left side of the expression without the angle brackets
+        """
+        return ExpressionNode.expression_l.search(self.expression).group(1)
 
     def render(self, factory, parent):
         """
@@ -109,9 +116,7 @@ class ExpressionNode(GrammarNode):
         :param factory: diagram node factory class
         :return:
         """
-        lvalue = self.expression.split('::=')[0]
-
-        renderer = factory.node(lvalue, self, parent)
+        renderer = factory.node(self, parent)
         content = renderer.render(factory, self)
 
         return content
