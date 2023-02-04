@@ -28,9 +28,7 @@ class Statement:
         self.gp_children = None     # GP child node generator
         self.child_nodes = []       # Statement nodes corresponding to the GP children
 
-        self.node_text = {
-            'instruction': []
-        }
+        self.node_text = {}
 
     def open(self):
         """
@@ -136,6 +134,11 @@ class ExitNode(Statement):
     """
     color = 'ffff80'
 
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['instruction'] = []
+
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
@@ -156,6 +159,7 @@ class ForNode(Statement):
     def __init__(self, parent):
         super().__init__(parent)
 
+        self.node_text['instruction'] = []
         self.node_text['for_control'] = []
         self.node_text['for_from'] = []
         self.node_text['for_to'] = []
@@ -245,6 +249,12 @@ class WhileNode(Statement):
     """
     WHILE statement outer XML element
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['instruction'] = []
+
     def open(self):
         print('<while text="{}" comment="" color="{color}">'.format(
             ' '.join(self.node_text['instruction']), color=self.color))
@@ -293,6 +303,11 @@ class AlternativeNode(Statement):
     """
     IF statement outer XML element
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['instruction'] = []
 
     # Problem: logical expression starts at the same level as IF
     def open(self):
@@ -371,6 +386,12 @@ class InstructionNode(Statement):
     multiple parser lines. The terminals for all parser lines are
     concatenated and returned as the content.
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['instruction'] = []
+
     def open(self):
         # Instructions contain no other elements so the closing tag is included.
         print('<instruction text="{}" comment="" color="{color}" rotated="0" disabled="0">'
@@ -388,6 +409,12 @@ class CallNode(InstructionNode):
     Node for subroutine calls. It is a non-container instruction with
     a distinct rendering.
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.node_text['instruction'] = []
+
     def open(self):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
