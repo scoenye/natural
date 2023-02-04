@@ -19,30 +19,33 @@
 
 import unittest
 
-from unittest.mock import MagicMock
-
 from goldparser.grammar import ExpressionNode, TerminalNode
 from structorizer.factory import StatementFactory
+from structorizer.nodes import DiagramNode, DiagramTerminal
 
 
 class ExpressionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.factory = StatementFactory
         self.node = ExpressionNode(0, '<program> ::=')
         self.node.add_node(1, TerminalNode(1, 'TEST'))
 
+    def test_export_node(self):
+        self.assertIsInstance(self.node.export_node(StatementFactory, None), DiagramNode)
+
     def test_render(self):
         # ExpressionNode renders to the screen so there is nothing to return.
-        self.assertEqual('', self.node.render(self.factory, None))
+        self.assertEqual('', self.node.render(StatementFactory, None))
 
 
 class TerminalNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.factory = MagicMock
         self.node = TerminalNode(0, 'TEST')
 
+    def test_export_node(self):
+        self.assertIsInstance(self.node.export_node(StatementFactory, None), DiagramTerminal)
+
     def test_render(self):
-        self.assertEqual('TEST', self.node.render(self.factory, None))
+        self.assertEqual('TEST', self.node.render(StatementFactory, None))
 
 
 if __name__ == '__main__':

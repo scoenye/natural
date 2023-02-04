@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import re
+
 from abc import ABC, abstractmethod
 
 
@@ -87,6 +87,21 @@ class ExpressionNode(GrammarNode):
         """
         yield from self.children
 
+    def export_node(self, factory, parent):
+        """
+        Create the diagram node for this grammar node
+        :param factory: StatementFactory
+        :param parent: Statement node above this expression
+        :return:
+        """
+        # Build our own Statement node
+        lvalue = self.expression.split('::=')[0]
+        statement = factory.node(lvalue, parent)
+
+        statement.import_expressions(factory, self)
+
+        return statement
+
     def render(self, factory, parent):
         """
         Produce a diagram node for this expression
@@ -124,9 +139,18 @@ class TerminalNode(GrammarNode):
         """
         pass
 
+    def export_node(self, factory, parent):
+        """
+        Create the diagram node for this grammar node
+        :param factory: StatementFactory
+        :param parent: Statement node above this expression
+        :return:
+        """
+        return factory.terminal(self.expression, parent)
+
     def render(self, factory, parent):
         """
-        A TerminalNode returns its keyword as an XML-safe string
+        A DiagramTerminal returns its keyword as an XML-safe string
         :param parent: diagram Statement immediately above
         :param factory: diagram node factory class
         :return:
