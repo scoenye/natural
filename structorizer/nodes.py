@@ -64,13 +64,13 @@ class Statement:
         if self.gp_children is None:
             self.gp_children = gp_node.traverse()
 
-    def import_expressions(self, factory, gp_node):
+    def import_expressions(self, factory):
         """
         Build the Statement nodes for the GP children of this
         node's ExpressionNode.
         :return:
         """
-        self._prime_generator(gp_node)
+        self._prime_generator(self.gp_node)
 
         for child in self.gp_children:
             self.child_nodes.append(child.export_node(factory, self))

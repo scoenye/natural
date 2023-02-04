@@ -98,8 +98,7 @@ class ExpressionNode(GrammarNode):
         """
         # Build our own Statement node
         statement = factory.node(self, parent)
-
-        statement.import_expressions(factory, self)
+        statement.import_expressions(factory)
 
         return statement
 
@@ -151,7 +150,7 @@ class TerminalNode(GrammarNode):
         :param parent: Statement node above this expression
         :return:
         """
-        return factory.terminal(self.expression, parent)
+        return factory.terminal(self, parent)
 
     def render(self, factory, parent):
         """

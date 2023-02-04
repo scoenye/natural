@@ -21,7 +21,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-from structorizer.nodes import InstructionNode
+from structorizer.nodes import InstructionNode, DiagramTerminal
 from structorizer.factory import StatementFactory
 
 from goldparser.grammar import ExpressionNode, TerminalNode
@@ -29,22 +29,18 @@ from goldparser.grammar import ExpressionNode, TerminalNode
 
 class InstructionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.diagram_node = InstructionNode(None, None)
+        self.gp_node = ExpressionNode(0, '<DEFINE_DATA>')
+        self.gp_node.add_node(1, TerminalNode(1, 'TEST'))
+        self.diagram_node = InstructionNode(self.gp_node, None)
 
     def test_render(self):
-        gp_node = ExpressionNode(0, '<DEFINE_DATA> ::=')
-        gp_node.add_node(1, TerminalNode(1, 'TEST'))
-
-        self.diagram_node.render(StatementFactory, gp_node)
+        self.diagram_node.render(StatementFactory, self.gp_node)
         self.assertEqual(['TEST'], self.diagram_node.node_text['instruction'])
 
     def test_import_expression(self):
-        gp_node = ExpressionNode(0, '<DEFINE_DATA> ::=')
-        gp_child = MagicMock()
-        gp_node.add_node(1, gp_child)
+        self.diagram_node.import_expressions(StatementFactory)
+        self.assertIsInstance(self.diagram_node.child_nodes[0], DiagramTerminal)
 
-        self.diagram_node.import_expressions(StatementFactory, gp_node)
-        gp_child.export_node.assert_called()
 
 if __name__ == '__main__':
     unittest.main()
