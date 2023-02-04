@@ -384,3 +384,9 @@ class CallNode(InstructionNode):
 
 class DatabaseInstruction(InstructionNode):
     color = '80ff80'        # Green
+
+
+class DiagramTerminal(Statement):
+    """
+    Diagram equivalent of the grammar side DiagramTerminal
+    """

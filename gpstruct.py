@@ -34,6 +34,7 @@ class GPStruct:
 
     def __init__(self):
         self.root = None
+        self.diagram_root = None
 
     @staticmethod
     def _split_line(line):
@@ -87,6 +88,14 @@ class GPStruct:
                         last_node.add_node(parts[0], new_node)
                         last_node = new_node    # Descend to the next level
 
+    def build_render_nodes(self, factory):
+        """
+        Create the diagram nodes for the parse tree
+        :param factory:
+        :return:
+        """
+        self.diagram_root = self.root.export_node(factory, None)
+
     def render(self, factory):
         """
         Render the parsed GP file as Structorizer XML
@@ -106,5 +115,6 @@ if __name__ == '__main__':
 
     gp_parser = GPStruct()
     gp_parser.parse(sys.stdin)
+    gp_parser.build_render_nodes(StatementFactory)
 
     gp_parser.render(StatementFactory)
