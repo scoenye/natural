@@ -29,7 +29,7 @@ from goldparser.grammar import ExpressionNode, TerminalNode
 
 class InstructionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.diagram_node = InstructionNode(None)
+        self.diagram_node = InstructionNode(None, None)
 
     def test_render(self):
         gp_node = ExpressionNode(0, '<DEFINE_DATA> ::=')

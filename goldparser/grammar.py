@@ -96,7 +96,7 @@ class ExpressionNode(GrammarNode):
         """
         # Build our own Statement node
         lvalue = self.expression.split('::=')[0]
-        statement = factory.node(lvalue, parent)
+        statement = factory.node(lvalue, self, parent)
 
         statement.import_expressions(factory, self)
 
@@ -111,7 +111,7 @@ class ExpressionNode(GrammarNode):
         """
         lvalue = self.expression.split('::=')[0]
 
-        renderer = factory.node(lvalue, parent)
+        renderer = factory.node(lvalue, self, parent)
         content = renderer.render(factory, self)
 
         return content

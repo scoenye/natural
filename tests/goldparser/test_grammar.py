@@ -21,20 +21,20 @@ import unittest
 
 from goldparser.grammar import ExpressionNode, TerminalNode
 from structorizer.factory import StatementFactory
-from structorizer.nodes import DiagramNode, DiagramTerminal
+from structorizer.nodes import InstructionNode, DiagramTerminal
 
 
 class ExpressionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.node = ExpressionNode(0, '<program> ::=')
-        self.node.add_node(1, TerminalNode(1, 'TEST'))
+        self.gp_node = ExpressionNode(0, '<ADD> ::=')
+        self.gp_node.add_node(1, TerminalNode(1, 'TEST'))
 
     def test_export_node(self):
-        self.assertIsInstance(self.node.export_node(StatementFactory, None), DiagramNode)
+        self.assertIsInstance(self.gp_node.export_node(StatementFactory, None), InstructionNode)
 
     def test_render(self):
         # ExpressionNode renders to the screen so there is nothing to return.
-        self.assertEqual('', self.node.render(StatementFactory, None))
+        self.assertEqual('', self.gp_node.render(StatementFactory, None))
 
 
 class TerminalNodeTest(unittest.TestCase):

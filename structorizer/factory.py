@@ -64,11 +64,12 @@ class StatementFactory:
     }
 
     @staticmethod
-    def node(gp_part, parent):
+    def node(gp_part, gp_node, parent):
         """
         Produce a diagram node for a GP instruction. If no matching
-        node can be found,  node is returned.
+        node can be found, a base Statement node is returned.
         :param gp_part:
+        :param gp_node: GrammarNode to render
         :param parent: diagram node above the node being created
         :return:
         """
@@ -77,21 +78,20 @@ class StatementFactory:
         temp_node = StatementFactory.nodes.get(lvalue.group(1))
 
         if temp_node is None:
-            return nodes.Statement(parent)    # The null renderer
+            return nodes.Statement(gp_node, parent)  # The null renderer
         else:
-            return temp_node(parent)
+            return temp_node(gp_node, parent)
 
     @staticmethod
-    def terminal(gp_part, parent):
+    def terminal(gp_node, parent):
         """
         Produce a TreeNode for a GP instruction. If no matching
         node can be found, an instruction node is returned.
-        :param gp_part:
+        :param gp_node:
         :param parent: diagram node above the node being created
         :return:
         """
-        terminal = nodes.DiagramTerminal(parent)
-        terminal.add_text('instruction', gp_part)
+        terminal = nodes.DiagramTerminal(gp_node, parent)
 
         return terminal
 

@@ -25,100 +25,100 @@ from structorizer import nodes
 
 class StatementFactoryTest(unittest.TestCase):
     def test_terminal(self):
-        self.assertIsInstance(Factory.terminal('test', None), nodes.DiagramTerminal)
+        self.assertIsInstance(Factory.terminal(None, None), nodes.DiagramTerminal)
 
     def test_program(self):
-        self.assertIsInstance(Factory.node('<program>', None), nodes.DiagramNode)
+        self.assertIsInstance(Factory.node('<program>', None, None), nodes.DiagramNode)
 
     def test_add(self):
-        self.assertIsInstance(Factory.node('<ADD>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<ADD>', None, None),  nodes.InstructionNode)
 
     def test_assign(self):
-        self.assertIsInstance(Factory.node('<ASSIGN>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<ASSIGN>', None, None),  nodes.InstructionNode)
 
     def test_anon_assign(self):
-        self.assertIsInstance(Factory.node('<anon_ASSIGN>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<anon_ASSIGN>', None, None),  nodes.InstructionNode)
 
     def test_callnat(self):
-        self.assertIsInstance(Factory.node('<CALLNAT>', None),  nodes.CallNode)
+        self.assertIsInstance(Factory.node('<CALLNAT>', None, None),  nodes.CallNode)
 
     def test_compress(self):
-        self.assertIsInstance(Factory.node('<COMPRESS>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<COMPRESS>', None, None),  nodes.InstructionNode)
 
     def test_define_data(self):
-        self.assertIsInstance(Factory.node('<DEFINE_DATA>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<DEFINE_DATA>', None, None),  nodes.InstructionNode)
 
     def test_define_window(self):
-        self.assertIsInstance(Factory.node('<DEFINE_WINDOW>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<DEFINE_WINDOW>', None, None),  nodes.InstructionNode)
 
     def test_escape(self):
-        self.assertIsInstance(Factory.node('<ESCAPE>', None),  nodes.ExitNode)
+        self.assertIsInstance(Factory.node('<ESCAPE>', None, None),  nodes.ExitNode)
 
     def test_find_with_loop(self):
-        self.assertIsInstance(Factory.node('<FIND_with_loop>', None),  nodes.DatabaseLoop)
+        self.assertIsInstance(Factory.node('<FIND_with_loop>', None, None),  nodes.DatabaseLoop)
 
     def test_for(self):
-        self.assertIsInstance(Factory.node('<FOR>', None),  nodes.ForNode)
+        self.assertIsInstance(Factory.node('<FOR>', None, None),  nodes.ForNode)
 
     def test_get(self):
-        self.assertIsInstance(Factory.node('<GET>', None),  nodes.DatabaseInstruction)
+        self.assertIsInstance(Factory.node('<GET>', None, None),  nodes.DatabaseInstruction)
 
     def test_if_closed(self):
-        self.assertIsInstance(Factory.node('<IF_closed>', None),  nodes.AlternativeNode)
+        self.assertIsInstance(Factory.node('<IF_closed>', None, None),  nodes.AlternativeNode)
 
     def test_if_open(self):
-        self.assertIsInstance(Factory.node('<IF_open>', None),  nodes.AlternativeNode)
+        self.assertIsInstance(Factory.node('<IF_open>', None, None),  nodes.AlternativeNode)
 
     def test_input(self):
-        self.assertIsInstance(Factory.node('<INPUT>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<INPUT>', None, None),  nodes.InstructionNode)
 
     def test_then_closed(self):
-        self.assertIsInstance(Factory.node('<THEN_closed>', None),  nodes.AlternativeTrueNode)
+        self.assertIsInstance(Factory.node('<THEN_closed>', None, None),  nodes.AlternativeTrueNode)
 
     def test_then_open(self):
-        self.assertIsInstance(Factory.node('<THEN_open>', None),  nodes.AlternativeTrueNode)
+        self.assertIsInstance(Factory.node('<THEN_open>', None, None),  nodes.AlternativeTrueNode)
 
     def test_else_closed(self):
-        self.assertIsInstance(Factory.node('<ELSE_closed>', None),  nodes.AlternativeFalseNode)
+        self.assertIsInstance(Factory.node('<ELSE_closed>', None, None),  nodes.AlternativeFalseNode)
 
     def test_else_open(self):
-        self.assertIsInstance(Factory.node('<ELSE_open>', None),  nodes.AlternativeFalseNode)
+        self.assertIsInstance(Factory.node('<ELSE_open>', None, None),  nodes.AlternativeFalseNode)
 
     def test_ignore(self):
-        self.assertIsInstance(Factory.node('<IGNORE>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<IGNORE>', None, None),  nodes.InstructionNode)
 
     def test_include(self):
-        self.assertIsInstance(Factory.node('<INCLUDE>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<INCLUDE>', None, None),  nodes.InstructionNode)
 
     def test_move(self):
-        self.assertIsInstance(Factory.node('<MOVE>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<MOVE>', None, None),  nodes.InstructionNode)
 
     def test_perform(self):
-        self.assertIsInstance(Factory.node('<PERFORM>', None),  nodes.CallNode)
+        self.assertIsInstance(Factory.node('<PERFORM>', None, None),  nodes.CallNode)
 
     def test_read(self):
-        self.assertIsInstance(Factory.node('<READ>', None),  nodes.DatabaseLoop)
+        self.assertIsInstance(Factory.node('<READ>', None, None),  nodes.DatabaseLoop)
 
     def test_repeat(self):
-        self.assertIsInstance(Factory.node('<REPEAT>', None),  nodes.ForeverNode)
+        self.assertIsInstance(Factory.node('<REPEAT>', None, None),  nodes.ForeverNode)
 
     def test_reset(self):
-        self.assertIsInstance(Factory.node('<RESET>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<RESET>', None, None),  nodes.InstructionNode)
 
     def test_subtract(self):
-        self.assertIsInstance(Factory.node('<SUBTRACT>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<SUBTRACT>', None, None),  nodes.InstructionNode)
 
     def test_set_key(self):
-        self.assertIsInstance(Factory.node('<SET_KEY>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<SET_KEY>', None, None),  nodes.InstructionNode)
 
     def test_store(self):
-        self.assertIsInstance(Factory.node('<STORE>', None),  nodes.DatabaseInstruction)
+        self.assertIsInstance(Factory.node('<STORE>', None, None),  nodes.DatabaseInstruction)
 
     def test_update(self):
-        self.assertIsInstance(Factory.node('<UPDATE>', None),  nodes.DatabaseInstruction)
+        self.assertIsInstance(Factory.node('<UPDATE>', None, None),  nodes.DatabaseInstruction)
 
     def test_end(self):
-        self.assertIsInstance(Factory.node('<END>', None),  nodes.InstructionNode)
+        self.assertIsInstance(Factory.node('<END>', None, None),  nodes.InstructionNode)
 
 
 if __name__ == '__main__':

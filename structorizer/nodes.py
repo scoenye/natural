@@ -23,7 +23,8 @@ from datetime import date
 class Statement:
     color = 'ffffff'
 
-    def __init__(self, parent):
+    def __init__(self, gp_node, parent):
+        self.gp_node = gp_node      # GrammarNode being rendered by this Statement
         self.parent = parent
         self.gp_children = None     # GP child node generator
         self.child_nodes = []       # Statement nodes corresponding to the GP children
@@ -134,8 +135,8 @@ class ExitNode(Statement):
     """
     color = 'ffff80'
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
 
@@ -156,8 +157,8 @@ class ForNode(Statement):
     FOR statement outer XML element
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
         self.node_text['for_control'] = []
@@ -250,8 +251,8 @@ class WhileNode(Statement):
     WHILE statement outer XML element
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
 
@@ -304,8 +305,8 @@ class AlternativeNode(Statement):
     IF statement outer XML element
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
 
@@ -387,8 +388,8 @@ class InstructionNode(Statement):
     concatenated and returned as the content.
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
 
@@ -410,8 +411,8 @@ class CallNode(InstructionNode):
     a distinct rendering.
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
 
         self.node_text['instruction'] = []
 
