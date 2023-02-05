@@ -27,24 +27,46 @@ from structorizer.factory import StatementFactory
 from goldparser.grammar import ExpressionNode, TerminalNode
 
 
-# class ExitNodeTest(unittest.TestCase):
-#     def setUp(self) -> None:
-#         statement = nodes.Statement(self.diagram_node)
-#         terminal = nodes.DiagramTerminal(statement)
-#         terminal.add_text('instruction', 'ESCAPE BOTTOM')
-#
-#         self.diagram_node = nodes.ExitNode(None)
-#
-#     def test_build(self):
-#         self.diagram_node.build('instruction')
-#         self.assertListEqual(self.diagram_node.node_text['instruction'], ['ESCAPE BOTTOM'])
+class CallNodeTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<PERFORM>')
+        gp_terminal = TerminalNode(1, 'PERFORM')
+        gp_expression.add_node(1, gp_terminal)
+
+        self.diagram_node = nodes.ExitNode(gp_expression, None)
+        # Gross violation of encapsulation, but otherwise we have to get the factory involved
+        # and a mistake there means this test may not be testing what it should be.
+        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
+
+    def test_build(self):
+        self.diagram_node.build('instruction')
+        self.assertListEqual(['PERFORM'], self.diagram_node.node_text['instruction'])
+
+
+class ExitNodeTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<ESCAPE>')
+        gp_terminal = TerminalNode(1, 'ESCAPE')
+        gp_expression.add_node(1, gp_terminal)
+
+        self.diagram_node = nodes.ExitNode(gp_expression, None)
+        # Gross violation of encapsulation, but otherwise we have to get the factory involved
+        # and a mistake there means this test may not be testing what it should be.
+        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
+
+    def test_build(self):
+        self.diagram_node.build('instruction')
+        self.assertListEqual(['ESCAPE'], self.diagram_node.node_text['instruction'])
 
 
 class InstructionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.gp_node = ExpressionNode(0, '<DEFINE_DATA>')
-        self.gp_node.add_node(1, TerminalNode(1, 'TEST'))
-        self.diagram_node = self.gp_node.export_node(StatementFactory, None)
+        gp_expression = ExpressionNode(0, '<DEFINE_DATA>')
+        gp_terminal = TerminalNode(1, 'TEST')
+        gp_expression.add_node(1, gp_terminal)
+
+        self.diagram_node = nodes.InstructionNode(gp_expression, None)
+        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
 
     # def test_render(self):
     #     self.diagram_node.render(StatementFactory, self.gp_node)

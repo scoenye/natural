@@ -153,6 +153,14 @@ class ExitNode(Statement):
         print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</jump>'.format(' '.join(self.node_text['instruction']), color=self.color))
 
+    def build(self, field):
+        """
+        Collect the terminals that make up the text for the exit
+        :return:
+        """
+        for child in self.child_nodes:
+            child.build('instruction')
+
     def render(self, factory, gp_node):
         super().render(factory, gp_node)
         self.open()
@@ -436,6 +444,14 @@ class CallNode(InstructionNode):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</call>'.format(' '.join(self.node_text['instruction']), color=self.color))
+
+    def build(self, field):
+        """
+        Collect the terminals that make up the text for the exit
+        :return:
+        """
+        for child in self.child_nodes:
+            child.build('instruction')
 
 
 class DatabaseInstruction(InstructionNode):
