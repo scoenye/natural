@@ -27,13 +27,40 @@ from structorizer.factory import StatementFactory
 from goldparser.grammar import ExpressionNode, TerminalNode
 
 
+class AlternativeNodeTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.grammar = ExpressionNode(0, '<IF_open>')
+        gp_IF = TerminalNode(1, 'IF')
+        gp_condition = ExpressionNode(1, '<logical_expression>')
+        gp_test = TerminalNode(2, '#TEST')
+        gp_eq = TerminalNode(2, 'EQ')
+        gp_2 = TerminalNode(2, '2')
+
+        self.grammar.add_node(1, gp_IF)
+        self.grammar.add_node(1, gp_condition)
+        gp_condition.add_node(2, gp_test)
+        gp_condition.add_node(2, gp_eq)
+        gp_condition.add_node(2, gp_2)
+
+        self.diagram_node = nodes.AlternativeNode(self.grammar, None)
+
+    def test_import_expression(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
+
+    def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+        self.assertListEqual(['#TEST', 'EQ', '2'], self.diagram_node.node_text['instruction'])
+
+
 class CallNodeTest(unittest.TestCase):
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<PERFORM>')
         gp_terminal = TerminalNode(1, 'PERFORM')
         gp_expression.add_node(1, gp_terminal)
 
-        self.diagram_node = nodes.ExitNode(gp_expression, None)
+        self.diagram_node = nodes.CallNode(gp_expression, None)
 
     def test_import_expression(self):
         self.diagram_node.import_expressions(StatementFactory)

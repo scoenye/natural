@@ -81,7 +81,8 @@ class Statement:
         to successfully create the NSD XML during the render pass.
         :return:
         """
-        pass
+        for child in self.child_nodes:
+            child.build('instruction')
 
     def matches(self, expression):
         """
@@ -161,14 +162,6 @@ class ExitNode(Statement):
         # Instructions contain no other elements so the closing tag is included.
         print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</jump>'.format(' '.join(self.node_text['instruction']), color=self.color))
-
-    def build(self, field):
-        """
-        Collect the terminals that make up the text for the exit
-        :return:
-        """
-        for child in self.child_nodes:
-            child.build('instruction')
 
     def render(self, factory, gp_node):
         super().render(factory, gp_node)
@@ -354,6 +347,18 @@ class AlternativeNode(Statement):
     def close(self):
         print('</alternative>')
 
+    def build(self, field):
+        """
+        Collect the parts that make up the logical expression
+        :return:
+        """
+        # [0] contains the IF terminal, which Structorizer does not need
+        for child in self.child_nodes:
+            if child.matches('<logical_expression>'):
+                break
+        # This is (should be...) the logical expression.
+        child.build('instruction')
+
     def render(self, factory, gp_node):
         # Problem: the logical expression is needed by open() but it is not known at this time.
         # super() will collect it, but will also inject any child instructions first. Not very usable.
@@ -440,14 +445,6 @@ class InstructionNode(Statement):
 
         return ''       # The node text has been printed so we return an empty string
 
-    def build(self, field):
-        """
-        Collect the terminals that make up the text for the instruction
-        :return:
-        """
-        for child in self.child_nodes:
-            child.build('instruction')
-
 
 class CallNode(InstructionNode):
     """
@@ -464,14 +461,6 @@ class CallNode(InstructionNode):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</call>'.format(' '.join(self.node_text['instruction']), color=self.color))
-
-    def build(self, field):
-        """
-        Collect the terminals that make up the text for the exit
-        :return:
-        """
-        for child in self.child_nodes:
-            child.build('instruction')
 
 
 class DatabaseInstruction(InstructionNode):
