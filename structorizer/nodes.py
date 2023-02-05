@@ -197,6 +197,27 @@ class ForNode(Statement):
         print('  </qFor>')
         print('</for>')
 
+    def build(self, field):
+        """
+        Collect the parts that make up the FOR instruction
+        :param field:
+        :return:
+        """
+        # A trimmed tree does not have any indication of what is coming
+        # for the required parts
+        # TODO: support for the optional STEP
+        child = self.child_nodes[0]  # FOR terminal
+        child.build('instruction')
+
+        child = self.child_nodes[1]  # loop variable
+        child.build('for_control')
+
+        child = self.child_nodes[2]  # start value
+        child.build('for_from')
+
+        child = self.child_nodes[3]  # end value
+        child.build('for_to')
+
     def render(self, factory, gp_node):
         """
         Find the various parts that make up the FOR statement controls
