@@ -75,6 +75,14 @@ class Statement:
         for child in self.gp_children:
             self.child_nodes.append(child.export_node(factory, self))
 
+    def build(self, field):
+        """
+        Collect any information needed from the child nodes in order
+        to successfully create the NSD XML during the render pass.
+        :return:
+        """
+        pass
+
     def render(self, factory, gp_node):
         """
         Collect the entities that make up the grammar node. A Statement
@@ -404,6 +412,14 @@ class InstructionNode(Statement):
 
         return ''       # The node text has been printed so we return an empty string
 
+    def build(self, field):
+        """
+        Collect the terminals that make up the text for the exit
+        :return:
+        """
+        for child in self.child_nodes:
+            child.build('instruction')
+
 
 class CallNode(InstructionNode):
     """
@@ -430,3 +446,11 @@ class DiagramTerminal(Statement):
     """
     Diagram equivalent of the grammar side DiagramTerminal
     """
+    def build(self, field):
+        """
+        Pass the contents of the GrammarNode terminal to the parent
+        Statement.
+        :param field:
+        :return:
+        """
+        self.parent.add_text(field, self.gp_node.render(None, None))
