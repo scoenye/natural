@@ -83,6 +83,15 @@ class Statement:
         """
         pass
 
+    def matches(self, expression):
+        """
+        Report if the Statement node expression matches the requested
+        expression.
+        :param expression: string to match against
+        :return: true if the expression matches
+        """
+        return self.gp_node.matches(expression)
+
     def render(self, factory, gp_node):
         """
         Collect the entities that make up the grammar node. A Statement
@@ -281,6 +290,17 @@ class WhileNode(Statement):
         print('  </qWhile>')
         print('</while>')
 
+    def build(self, field):
+        """
+        Collect the terminals that make up the text for the instruction
+        :return:
+        """
+        for child in self.child_nodes:
+            if child.matches('<loop_statement_list>'):
+                break
+
+            child.build('instruction')
+
     def render(self, factory, gp_node):
         """
         Natural database statements are represented with WHILE nodes.
@@ -422,7 +442,7 @@ class InstructionNode(Statement):
 
     def build(self, field):
         """
-        Collect the terminals that make up the text for the exit
+        Collect the terminals that make up the text for the instruction
         :return:
         """
         for child in self.child_nodes:

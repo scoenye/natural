@@ -34,11 +34,13 @@ class CallNodeTest(unittest.TestCase):
         gp_expression.add_node(1, gp_terminal)
 
         self.diagram_node = nodes.ExitNode(gp_expression, None)
-        # Gross violation of encapsulation, but otherwise we have to get the factory involved
-        # and a mistake there means this test may not be testing what it should be.
-        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
+
+    def test_import_expression(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
 
     def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
         self.diagram_node.build('instruction')
         self.assertListEqual(['PERFORM'], self.diagram_node.node_text['instruction'])
 
@@ -50,11 +52,13 @@ class ExitNodeTest(unittest.TestCase):
         gp_expression.add_node(1, gp_terminal)
 
         self.diagram_node = nodes.ExitNode(gp_expression, None)
-        # Gross violation of encapsulation, but otherwise we have to get the factory involved
-        # and a mistake there means this test may not be testing what it should be.
-        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
+
+    def test_import_expression(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
 
     def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
         self.diagram_node.build('instruction')
         self.assertListEqual(['ESCAPE'], self.diagram_node.node_text['instruction'])
 
@@ -66,19 +70,42 @@ class InstructionNodeTest(unittest.TestCase):
         gp_expression.add_node(1, gp_terminal)
 
         self.diagram_node = nodes.InstructionNode(gp_expression, None)
-        self.diagram_node.child_nodes.append(nodes.DiagramTerminal(gp_terminal, self.diagram_node))
 
     # def test_render(self):
     #     self.diagram_node.render(StatementFactory, self.gp_node)
     #     self.assertEqual(['TEST'], self.diagram_node.node_text['instruction'])
 
+    def test_import_expression(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
+
     def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
         self.diagram_node.build('instruction')
         self.assertListEqual(['TEST'], self.diagram_node.node_text['instruction'])
+
+
+class WhileNodeTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.grammar = ExpressionNode(0, '<READ>')
+        gp_terminal1 = TerminalNode(1, 'RPT-GRP0314')
+        gp_loop = ExpressionNode(1, '<loop_statement_list>')
+        gp_terminal2 = TerminalNode(2, 'LOOP')
+
+        self.grammar.add_node(1, gp_terminal1)
+        self.grammar.add_node(1, gp_loop)
+        gp_loop.add_node(2, gp_terminal2)
+
+        self.diagram_node = nodes.WhileNode(self.grammar, None)
 
     def test_import_expression(self):
         self.diagram_node.import_expressions(StatementFactory)
         self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
+
+    def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+        self.assertListEqual(['RPT-GRP0314'], self.diagram_node.node_text['instruction'])
 
 
 if __name__ == '__main__':
