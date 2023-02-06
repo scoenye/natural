@@ -104,12 +104,12 @@ class GPStruct:
         """
         self.diagram_root.build('instruction')
 
-    def render(self):
+    def render(self, out_file):
         """
         Render the parsed GP file as Structorizer XML
         :return:
         """
-        self.diagram_root.render()
+        self.diagram_root.render(out_file)
 
 
 if __name__ == '__main__':
@@ -124,4 +124,4 @@ if __name__ == '__main__':
     gp_parser.build_render_nodes(StatementFactory)
     gp_parser.build_diagram()
 
-    # gp_parser.render()
+    gp_parser.render(sys.stdout)
