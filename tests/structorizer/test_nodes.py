@@ -99,6 +99,23 @@ class ExitNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
+class ForeverNodeTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.grammar = ExpressionNode(0, '<REPEAT>')
+        self.diagram_node = nodes.ForeverNode(self.grammar, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<forever comment="" color="ffffff">\n  <qForever>\n  </qForever>\n</forever>\n',
+                             output.getvalue())
+
+
 class ForNodeTest(unittest.TestCase):
     def setUp(self) -> None:
         self.grammar = ExpressionNode(0, '<FOR>')
