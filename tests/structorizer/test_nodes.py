@@ -157,10 +157,6 @@ class InstructionNodeTest(unittest.TestCase):
 
         self.diagram_node = nodes.InstructionNode(gp_expression, None)
 
-    # def test_render(self):
-    #     self.diagram_node.render(StatementFactory, self.gp_node)
-    #     self.assertEqual(['TEST'], self.diagram_node.node_text['instruction'])
-
     def test_import_expression(self):
         self.diagram_node.import_expressions(StatementFactory)
         self.assertIsInstance(self.diagram_node.child_nodes[0], nodes.DiagramTerminal)
@@ -169,6 +165,17 @@ class InstructionNodeTest(unittest.TestCase):
         self.diagram_node.import_expressions(StatementFactory)
         self.diagram_node.build('instruction')
         self.assertListEqual(['TEST'], self.diagram_node.node_text['instruction'])
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<instruction text="TEST" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n',
+                             output.getvalue())
 
 
 class WhileNodeTest(unittest.TestCase):

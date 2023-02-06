@@ -403,15 +403,12 @@ class InstructionNode(Statement):
         self.node_text['instruction'] = []
 
     def open(self, out_file):
-        # Instructions contain no other elements so the closing tag is included.
-        print('<instruction text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</instruction>'.format(' '.join(self.node_text['instruction']), color=self.color))
+        print('<instruction text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
+            instruction=' '.join(self.node_text['instruction']),
+            color=self.color), file=out_file)
 
-    def render(self, factory, gp_node):
-        super().render(factory, gp_node)
-        self.open()
-
-        return ''       # The node text has been printed so we return an empty string
+    def close(self, out_file):
+        print('</instruction>', file=out_file)
 
 
 class CallNode(InstructionNode):
