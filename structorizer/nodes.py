@@ -55,7 +55,7 @@ class Statement:
         """
         if self.node_text.get(field) is not None:
             self.node_text[field].append(text)
-        else:
+        elif self.parent:   # Terminals for not yet supported instructions can reach the diagram root and crash
             self.parent.add_text(field, text)
 
     def _prime_generator(self, gp_node):

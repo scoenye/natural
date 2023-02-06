@@ -33,7 +33,7 @@ class GPStruct:
     """
 
     def __init__(self):
-        self.root = None
+        self.gp_root = None
         self.diagram_root = None
 
     @staticmethod
@@ -69,8 +69,8 @@ class GPStruct:
             if parts[1][0] != '<':
                 print('Unable to detect a starting expression.')
             else:
-                self.root = ExpressionNode(parts[0], parts[1])
-                last_node = self.root
+                self.gp_root = ExpressionNode(parts[0], parts[1])
+                last_node = self.gp_root
 
                 for line in gp_file:  # Process the parse tree and stop at the end of the section
                     line = line.strip()
@@ -94,16 +94,22 @@ class GPStruct:
         :param factory:
         :return:
         """
-        self.diagram_root = self.root.export_node(factory, None)
+        self.diagram_root = self.gp_root.export_node(factory, None)
 
-    def render(self, factory):
+    def build_diagram(self):
         """
-        Render the parsed GP file as Structorizer XML
-        :param factory: Diagram element factory
+        Tell the diagram nodes to collect what they need to render
+        the final output.
         :return:
         """
-        diagram = self.root.render(factory, None)
-        print(diagram)
+        self.diagram_root.build('instruction')
+
+    def render(self):
+        """
+        Render the parsed GP file as Structorizer XML
+        :return:
+        """
+        self.diagram_root.render()
 
 
 if __name__ == '__main__':
@@ -116,5 +122,6 @@ if __name__ == '__main__':
     gp_parser = GPStruct()
     gp_parser.parse(sys.stdin)
     gp_parser.build_render_nodes(StatementFactory)
+    gp_parser.build_diagram()
 
-    gp_parser.render(StatementFactory)
+    # gp_parser.render()

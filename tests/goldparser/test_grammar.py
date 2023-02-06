@@ -26,8 +26,11 @@ from structorizer.nodes import InstructionNode, DiagramTerminal
 
 class ExpressionNodeTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.gp_node = ExpressionNode(0, '<ADD> ::=')
+        self.gp_node = ExpressionNode(0, '<ADD> ::= <rvalue>')
         self.gp_node.add_node(1, TerminalNode(1, 'TEST'))
+
+    def test_lvalue(self):
+        self.assertEqual('ADD', self.gp_node.lvalue())
 
     def test_export_node(self):
         self.assertIsInstance(self.gp_node.export_node(StatementFactory, None), InstructionNode)

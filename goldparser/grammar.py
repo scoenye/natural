@@ -58,7 +58,7 @@ class ExpressionNode(GrammarNode):
     GP grammar node to hold an expression. ExpressionNodes may contain
     other GrammarNodes.
     """
-    expression_l = re.compile(r'<(.+)>')
+    expression_l = re.compile(r'<(.+?)>')
 
     def __init__(self, level, expression):
         super().__init__(level, expression)
