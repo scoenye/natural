@@ -206,6 +206,19 @@ class ForNodeTest(unittest.TestCase):
         self.assertListEqual(['1'], self.diagram_node.node_text['for_from'])
         self.assertListEqual(['C*SOMETHING'], self.diagram_node.node_text['for_to'])
 
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<for text="FOR #J &#60;- 1 C*SOMETHING" comment="" color="ffffff">\n'
+                             '  <qFor>\n'
+                             '  </qFor>\n'
+                             '</for>\n',
+                             output.getvalue())
+
 
 class InstructionNodeTest(unittest.TestCase):
     def setUp(self) -> None:

@@ -161,6 +161,7 @@ class ExitNode(Statement):
     def close(self, out_file):
         print('</jump>', file=out_file)
 
+
 class ForNode(Statement):
     """
     FOR statement outer XML element
@@ -181,12 +182,12 @@ class ForNode(Statement):
             for_control=' '.join(self.node_text['for_control']),
             for_from=' '.join(self.node_text['for_from']),
             for_to=' '.join(self.node_text['for_to']),
-            color=self.color))
-        print('  <qFor>')
+            color=self.color), file=out_file)
+        print('  <qFor>', file=out_file)
 
     def close(self, out_file):
-        print('  </qFor>')
-        print('</for>')
+        print('  </qFor>', file=out_file)
+        print('</for>', file=out_file)
 
     def build(self, field):
         """
@@ -208,45 +209,6 @@ class ForNode(Statement):
 
         child = self.child_nodes[3]  # end value
         child.build('for_to')
-
-    def render(self, factory, gp_node):
-        """
-        Find the various parts that make up the FOR statement controls
-        and assemble the element text.
-        :param factory:
-        :param gp_node:
-        :return:
-        """
-        self._prime_generator(gp_node)      # Initialize the GP node generator
-        # <FOR> ::= FOR <variable_l_scalar> <FOR_from> <FOR_to> <FOR_operand>
-
-        # Untrimmed tree contains variable_l_scalar, FOR_from, FOR_to and statement_list
-        # Trimmed version may only have the final types of the three loop control fields
-        # and may not have an explicit statement_list.
-        # -> first child after FOR is the loop variable, 2nd is the starting value, 3rd
-        # is the end value.
-
-        child = next(self.gp_children)      # FOR terminal
-        self.add_text('instruction', child.render(factory, self))
-
-        child = next(self.gp_children)      # loop variable
-        self.add_text('for_control', child.render(factory, self))
-
-        child = next(self.gp_children)      # start value
-        self.add_text('for_from', child.render(factory, self))
-
-        child = next(self.gp_children)      # end value
-        self.add_text('for_to', child.render(factory, self))
-
-        # TODO: handle step
-
-        self.open(out_file)  # Output FOR statement with the current contents of node_text
-
-        self.node_text['instruction'] = [child.render(out_file)]  # Restart with the first statement_list
-        super().render(out_file)
-        self.close(out_file)
-
-        return ''       # The node text has been printed, so we return an empty string
 
 
 class ForeverNode(Statement):
