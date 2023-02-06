@@ -309,11 +309,12 @@ class AlternativeNode(Statement):
 
     # Problem: logical expression starts at the same level as IF
     def open(self, out_file):
-        print('<alternative text="{}" comment="" color="{color}">'.format(
-            ' '.join(self.node_text['instruction']), color=self.color))
+        print('<alternative text="{instruction}" comment="" color="{color}">'.format(
+            instruction=' '.join(self.node_text['instruction']),
+            color=self.color), file=out_file)
 
     def close(self, out_file):
-        print('</alternative>')
+        print('</alternative>', file=out_file)
 
     def build(self, field):
         """
@@ -326,32 +327,6 @@ class AlternativeNode(Statement):
                 break
         # This is (should be...) the logical expression.
         child.build('instruction')
-
-    def render(self, factory, gp_node):
-        # Problem: the logical expression is needed by open() but it is not known at this time.
-        # super() will collect it, but will also inject any child instructions first. Not very usable.
-        # Out on a limb: the first child node is the IF statement itself, the 2nd the expression.
-        # Hack our way out: drop the 1st child (also takes care of the unwanted IF), process the
-        # 2nd child here.
-        self._prime_generator(gp_node)
-
-        # Collect the <IF> expression - contains the IF terminal
-        expression = next(self.gp_children)
-        # Although not necessary, keep node_text a list in order to maintain consistency
-        self.node_text['instruction'] = [expression.render(factory, self)]
-
-        # This is (should be...) the logical expression.
-        expression = next(self.gp_children)
-        self.node_text['instruction'] = [expression.render(factory, self)]   # list for consistency
-
-        self.open()                             # This embeds the expression in the element open statement
-
-        self.node_text['instruction'] = []      # Start over for the qTrue/qFalse branches
-        super().render(factory, gp_node)        # Process remaining gp_node children
-
-        self.close()
-
-        return ''       # The node text has been printed so we return an empty string
 
 
 class AlternativeTrueNode(Statement):

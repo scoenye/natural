@@ -52,6 +52,17 @@ class AlternativeNodeTest(unittest.TestCase):
         self.diagram_node.build('instruction')
         self.assertListEqual(['#TEST', 'EQ', '2'], self.diagram_node.node_text['instruction'])
 
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<alternative text="#TEST EQ 2" comment="" color="ffffff">\n'
+                             '</alternative>\n',
+                             output.getvalue())
+
 
 class AlternativeTrueTest(unittest.TestCase):
     def setUp(self) -> None:
