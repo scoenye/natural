@@ -95,7 +95,7 @@ class Statement:
         """
         return self.gp_node.matches(expression)
 
-    def render(self, factory, gp_node):
+    def render(self, out_file):
         """
         Collect the entities that make up the grammar node. A Statement
         is created for each expression as processing descends the
@@ -103,18 +103,15 @@ class Statement:
         are joined and returned as the outcome of the statement. This
         repeats as execution ascends back up the grammar tree, leading
         to a single line of text for gp_node.
-        :param factory: Statement generator
-        :param gp_node: GoldParser grammar node text
+        :param out_file: XML output destination
         :return:
         """
-        self._prime_generator(gp_node)
+        self.open(out_file)
 
-        for child in self.gp_children:
-            child_content = child.render(factory, self)
-            if child_content:
-                self.add_text('instruction', child_content)
+        for child in self.child_nodes:
+            child.render(out_file)
 
-        return ' '.join(self.node_text['instruction'])
+        self.close(out_file)
 
 
 class DiagramNode(Statement):
@@ -156,15 +153,13 @@ class ExitNode(Statement):
 
     def open(self, out_file):
         # Instructions contain no other elements so the closing tag is included.
-        print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</jump>'.format(' '.join(self.node_text['instruction']), color=self.color))
+        print('<jump text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
+            instruction=' '.join(self.node_text['instruction']),
+            color=self.color),
+            file=out_file)
 
-    def render(self, factory, gp_node):
-        super().render(factory, gp_node)
-        self.open()
-
-        return ''       # The node text has been printed so we return an empty string
-
+    def close(self, out_file):
+        print('</jump>', file=out_file)
 
 class ForNode(Statement):
     """

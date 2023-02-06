@@ -17,9 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import io
 import unittest
-
-from unittest.mock import MagicMock
 
 from structorizer import nodes
 from structorizer.factory import StatementFactory
@@ -88,6 +87,16 @@ class ExitNodeTest(unittest.TestCase):
         self.diagram_node.import_expressions(StatementFactory)
         self.diagram_node.build('instruction')
         self.assertListEqual(['ESCAPE'], self.diagram_node.node_text['instruction'])
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<jump text="ESCAPE" comment="" color="ffff80" rotated="0" disabled="0">\n</jump>\n',
+                             output.getvalue())
 
 
 class ForNodeTest(unittest.TestCase):
