@@ -31,16 +31,18 @@ class Statement:
 
         self.node_text = {}
 
-    def open(self):
+    def open(self, out_file):
         """
         Generate the opening phrase
+        :param out_file:
         :return:
         """
         pass
 
-    def close(self):
+    def close(self, out_file):
         """
         Generate the closing phrase
+        :param out_file:
         :return:
         """
         pass
@@ -120,11 +122,11 @@ class DiagramNode(Statement):
     Structorizer diagram node
     """
 
-    def open(self):
+    def open(self, out_file):
         # TODO: make the program name an attribute
         today = date.today().isoformat()
 
-        print('<?xml version="1.0" encoding="UTF-8"?>')
+        print('<?xml version="1.0" encoding="UTF-8"?>', file=out_file)
         print('<root xmlns:nsd="https://structorizer.fisch.lu" version="3.30-12" '
               'preRepeat="until " postFor="to" preReturn="return" postForIn="in" preWhile="while " '
               'output="OUTPUT" input="INPUT" preFor="for" preExit="exit" preLeave="leave" ignoreCase="true" '
@@ -132,19 +134,13 @@ class DiagramNode(Statement):
               'changedby="" changed="" origin="GPStruct" '
               'text="{}" comment="" color="{color}" type="program" style="nice">'.format(today,
                                                                                          'PROGRAM',
-                                                                                         color=self.color))
-        print('  <children>')
+                                                                                         color=self.color),
+              file=out_file)
+        print('  <children>', file=out_file)
 
-    def close(self):
-        print('  </children>')
-        print('</root>')
-
-    def render(self, factory, gp_node):
-        self.open()
-        super().render(factory, gp_node)
-        self.close()
-
-        return ''       # The node text has been printed, so we return an empty string
+    def close(self, out_file):
+        print('  </children>', file=out_file)
+        print('</root>', file=out_file)
 
 
 class ExitNode(Statement):
@@ -158,7 +154,7 @@ class ExitNode(Statement):
 
         self.node_text['instruction'] = []
 
-    def open(self):
+    def open(self, out_file):
         # Instructions contain no other elements so the closing tag is included.
         print('<jump text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</jump>'.format(' '.join(self.node_text['instruction']), color=self.color))
@@ -183,7 +179,7 @@ class ForNode(Statement):
         self.node_text['for_from'] = []
         self.node_text['for_to'] = []
 
-    def open(self):
+    def open(self, out_file):
         # for uses &#60; (less than) to separate the loop variable from the values
         print('<for text="{instruction} {for_control} &#60;- {for_from} {for_to}" comment="" color="{color}">'.format(
             instruction=' '.join(self.node_text['instruction']),
@@ -193,7 +189,7 @@ class ForNode(Statement):
             color=self.color))
         print('  <qFor>')
 
-    def close(self):
+    def close(self, out_file):
         print('  </qFor>')
         print('</for>')
 
@@ -249,11 +245,11 @@ class ForNode(Statement):
 
         # TODO: handle step
 
-        self.open()     # Output FOR statement with the current contents of node_text
+        self.open(out_file)  # Output FOR statement with the current contents of node_text
 
-        self.node_text['instruction'] = [child.render(factory, self)]  # Restart with the first statement_list
-        super().render(factory, gp_node)
-        self.close()
+        self.node_text['instruction'] = [child.render(out_file)]  # Restart with the first statement_list
+        super().render(out_file)
+        self.close(out_file)
 
         return ''       # The node text has been printed, so we return an empty string
 
@@ -262,11 +258,11 @@ class ForeverNode(Statement):
     """
     FOREVER statement outer XML element
     """
-    def open(self):
+    def open(self, out_file):
         print('<forever comment="" color="{color}">'.format(color=self.color))
         print('  <qForever>')
 
-    def close(self):
+    def close(self, out_file):
         print('  </qForever>')
         print('</forever>')
 
@@ -295,12 +291,12 @@ class WhileNode(Statement):
 
         self.node_text['instruction'] = []
 
-    def open(self):
+    def open(self, out_file):
         print('<while text="{}" comment="" color="{color}">'.format(
             ' '.join(self.node_text['instruction']), color=self.color))
         print('  <qWhile>')
 
-    def close(self):
+    def close(self, out_file):
         print('  </qWhile>')
         print('</while>')
 
@@ -361,11 +357,11 @@ class AlternativeNode(Statement):
         self.node_text['instruction'] = []
 
     # Problem: logical expression starts at the same level as IF
-    def open(self):
+    def open(self, out_file):
         print('<alternative text="{}" comment="" color="{color}">'.format(
             ' '.join(self.node_text['instruction']), color=self.color))
 
-    def close(self):
+    def close(self, out_file):
         print('</alternative>')
 
     def build(self, field):
@@ -411,10 +407,10 @@ class AlternativeTrueNode(Statement):
     """
     Alternative statement True branch
     """
-    def open(self):
+    def open(self, out_file):
         print('<qTrue>')
 
-    def close(self):
+    def close(self, out_file):
         print('</qTrue>')
 
     def render(self, factory, gp_node):
@@ -429,10 +425,10 @@ class AlternativeFalseNode(Statement):
     """
     Alternative statement False branch
     """
-    def open(self):
+    def open(self, out_file):
         print('<qFalse>')
 
-    def close(self):
+    def close(self, out_file):
         print('</qFalse>')
 
     def render(self, factory, gp_node):
@@ -455,7 +451,7 @@ class InstructionNode(Statement):
 
         self.node_text['instruction'] = []
 
-    def open(self):
+    def open(self, out_file):
         # Instructions contain no other elements so the closing tag is included.
         print('<instruction text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</instruction>'.format(' '.join(self.node_text['instruction']), color=self.color))
@@ -478,7 +474,7 @@ class CallNode(InstructionNode):
 
         self.node_text['instruction'] = []
 
-    def open(self):
+    def open(self, out_file):
         # Calls contain no other elements so the closing tag is included.
         print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
               '</call>'.format(' '.join(self.node_text['instruction']), color=self.color))
