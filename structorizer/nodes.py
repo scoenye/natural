@@ -423,9 +423,12 @@ class CallNode(InstructionNode):
         self.node_text['instruction'] = []
 
     def open(self, out_file):
-        # Calls contain no other elements so the closing tag is included.
-        print('<call text="{}" comment="" color="{color}" rotated="0" disabled="0">'
-              '</call>'.format(' '.join(self.node_text['instruction']), color=self.color))
+        print('<call text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
+            instruction=' '.join(self.node_text['instruction']),
+            color=self.color), file=out_file)
+
+    def close(self, out_file):
+        print('</call>', file=out_file)
 
 
 class DatabaseInstruction(InstructionNode):
