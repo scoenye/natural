@@ -274,12 +274,12 @@ class WhileNode(Statement):
 
     def open(self, out_file):
         print('<while text="{}" comment="" color="{color}">'.format(
-            ' '.join(self.node_text['instruction']), color=self.color))
-        print('  <qWhile>')
+            ' '.join(self.node_text['instruction']), color=self.color), file=out_file)
+        print('  <qWhile>', file=out_file)
 
     def close(self, out_file):
-        print('  </qWhile>')
-        print('</while>')
+        print('  </qWhile>', file=out_file)
+        print('</while>', file=out_file)
 
     def build(self, field):
         """
@@ -291,36 +291,6 @@ class WhileNode(Statement):
                 break
 
             child.build('instruction')
-
-    def render(self, factory, gp_node):
-        """
-        Natural database statements are represented with WHILE nodes.
-        The header has many optional clauses but the loop contents
-        start with a loop_statement_list expression. This implementation
-        collects and renders all clauses up to the statement list as the
-        text of the WHILE node.
-        :param factory:
-        :param gp_node:
-        :return:
-        """
-        self._prime_generator(gp_node)
-
-        # Roll up everything until <loop_statement_list> is encountered? That one is always present.
-        # TODO: evaluate with an empty loop
-        for child in self.gp_children:
-            if child.matches('<loop_statement_list>'):
-                break
-            child_content = child.render(factory, self)
-            if child_content:
-                self.add_text('instruction', child_content)
-
-        self.open()     # Output FOREVER statement with the current contents of node_text
-
-        self.node_text['instruction'] = [child.render(factory, self)]    # Restart with the first loop_statement_list
-        super().render(factory, gp_node)
-        self.close()
-
-        return ''       # The node text has been printed so we return an empty string
 
 
 class DatabaseLoop(WhileNode):
