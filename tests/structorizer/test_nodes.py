@@ -53,6 +53,42 @@ class AlternativeNodeTest(unittest.TestCase):
         self.assertListEqual(['#TEST', 'EQ', '2'], self.diagram_node.node_text['instruction'])
 
 
+class AlternativeTrueTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<THEN_closed>')
+
+        self.diagram_node = nodes.AlternativeTrueNode(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qTrue>\n'
+                             '</qTrue>\n',
+                             output.getvalue())
+
+
+class AlternativeFalseTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<ELSE_open>')
+
+        self.diagram_node = nodes.AlternativeFalseNode(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qFalse>\n'
+                             '</qFalse>\n',
+                             output.getvalue())
+
+
 class CallNodeTest(unittest.TestCase):
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<PERFORM>')

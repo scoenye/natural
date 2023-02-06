@@ -359,17 +359,10 @@ class AlternativeTrueNode(Statement):
     Alternative statement True branch
     """
     def open(self, out_file):
-        print('<qTrue>')
+        print('<qTrue>', file=out_file)
 
     def close(self, out_file):
-        print('</qTrue>')
-
-    def render(self, factory, gp_node):
-        self.open()
-        super().render(factory, gp_node)
-        self.close()
-
-        return ''       # The node text has been printed so we return an empty string
+        print('</qTrue>', file=out_file)
 
 
 class AlternativeFalseNode(Statement):
@@ -377,17 +370,10 @@ class AlternativeFalseNode(Statement):
     Alternative statement False branch
     """
     def open(self, out_file):
-        print('<qFalse>')
+        print('<qFalse>', file=out_file)
 
     def close(self, out_file):
-        print('</qFalse>')
-
-    def render(self, factory, gp_node):
-        self.open()
-        super().render(factory, gp_node)
-        self.close()
-
-        return ''       # The node text has been printed so we return an empty string
+        print('</qFalse>', file=out_file)
 
 
 class InstructionNode(Statement):
