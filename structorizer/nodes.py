@@ -82,7 +82,7 @@ class Statement:
         :return:
         """
         for child in self.child_nodes:
-            child.build('instruction')
+            child.build(field)
 
     def matches(self, expression):
         """

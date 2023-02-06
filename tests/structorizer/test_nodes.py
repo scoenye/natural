@@ -96,12 +96,15 @@ class ForNodeTest(unittest.TestCase):
         self.grammar.add_node(1, TerminalNode(1, 'FOR'))
         gp_control = ExpressionNode(1, '<user_identifier>')
         gp_control.add_node(2, TerminalNode(2, '#J'))
+        self.grammar.add_node(1, gp_control)
         gp_start = ExpressionNode(1, '<constant_integer_pos>')
         gp_start.add_node(2, TerminalNode(2, '1'))
+        self.grammar.add_node(1, gp_start)
         gp_to = ExpressionNode(1, '<user_identifier>')
         gp_to.add_node(2, TerminalNode(2, 'C*SOMETHING'))
+        self.grammar.add_node(1, gp_to)
 
-        self.diagram_node = nodes.AlternativeNode(self.grammar, None)
+        self.diagram_node = nodes.ForNode(self.grammar, None)
 
     def test_import_expression(self):
         self.diagram_node.import_expressions(StatementFactory)
