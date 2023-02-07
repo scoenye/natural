@@ -177,7 +177,7 @@ class ForNode(Statement):
 
     def open(self, out_file):
         # for uses &#60; (less than) to separate the loop variable from the values
-        print('<for text="{instruction} {for_control} &#60;- {for_from} {for_to}" comment="" color="{color}">'.format(
+        print('<for text="{instruction} {for_control} &#60;- {for_from} to {for_to}" comment="" color="{color}">'.format(
             instruction=' '.join(self.node_text['instruction']),
             for_control=' '.join(self.node_text['for_control']),
             for_from=' '.join(self.node_text['for_from']),
@@ -209,6 +209,9 @@ class ForNode(Statement):
 
         child = self.child_nodes[3]  # end value
         child.build('for_to')
+
+        for child in self.child_nodes[4:-1]:
+            child.build('instruction')
 
 
 class ForeverNode(Statement):

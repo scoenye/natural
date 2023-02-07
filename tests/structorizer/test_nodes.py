@@ -232,7 +232,7 @@ class ForNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<for text="FOR #J &#60;- 1 C*SOMETHING" comment="" color="ffffff">\n'
+            self.assertEqual('<for text="FOR #J &#60;- 1 to C*SOMETHING" comment="" color="ffffff">\n'
                              '  <qFor>\n'
                              '  </qFor>\n'
                              '</for>\n',
