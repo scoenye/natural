@@ -162,6 +162,13 @@ class ExitNode(Statement):
         print('</jump>', file=out_file)
 
 
+class ExternalExitNode(ExitNode):
+    """
+    Cyan colored jump out of the current module
+    """
+    color = '80ffff'
+
+
 class ForNode(Statement):
     """
     FOR statement outer XML element

@@ -37,6 +37,7 @@ class StatementFactory:
         'DEFINE_WINDOW': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,
         'ESCAPE': nodes.ExitNode,
+        'FETCH': nodes.ExternalExitNode,
         'FIND_with_loop': nodes.DatabaseLoop,
         'FOR': nodes.ForNode,
         'GET': nodes.DatabaseInstruction,
