@@ -31,15 +31,6 @@ class GrammarNode(ABC):
 
         self.parent = None      # Node immediately above this node
 
-    @abstractmethod
-    def render(self, factory, parent):
-        """
-        Produce diagram contents for the grammar node
-        :param factory: diagram node factory class
-        :param parent: diagram node immediately above
-        :return:
-        """
-
     def matches(self, lvalue):
         """
         Check if the left side of the expression is a match to the
@@ -108,18 +99,6 @@ class ExpressionNode(GrammarNode):
         """
         return ExpressionNode.expression_l.search(self.expression).group(1)
 
-    def render(self, factory, parent):
-        """
-        Produce a diagram node for this expression
-        :param parent: diagram Statement immediately above
-        :param factory: diagram node factory class
-        :return:
-        """
-        renderer = factory.node(self, parent)
-        content = renderer.render(factory, self)
-
-        return content
-
 
 class TerminalNode(GrammarNode):
     """
@@ -152,7 +131,7 @@ class TerminalNode(GrammarNode):
         """
         return factory.terminal(self, parent)
 
-    def render(self, factory, parent):
+    def render(self):
         """
         A DiagramTerminal returns its keyword as an XML-safe string
         :param parent: diagram Statement immediately above

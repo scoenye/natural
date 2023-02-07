@@ -35,10 +35,6 @@ class ExpressionNodeTest(unittest.TestCase):
     def test_export_node(self):
         self.assertIsInstance(self.gp_node.export_node(StatementFactory, None), InstructionNode)
 
-    def test_render(self):
-        # ExpressionNode renders to the screen so there is nothing to return.
-        self.assertEqual('', self.gp_node.render(StatementFactory, None))
-
 
 class TerminalNodeTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -48,7 +44,7 @@ class TerminalNodeTest(unittest.TestCase):
         self.assertIsInstance(self.node.export_node(StatementFactory, None), DiagramTerminal)
 
     def test_render(self):
-        self.assertEqual('TEST', self.node.render(StatementFactory, None))
+        self.assertEqual('TEST', self.node.render())
 
 
 if __name__ == '__main__':

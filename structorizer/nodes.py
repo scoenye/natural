@@ -385,7 +385,7 @@ class DiagramTerminal(Statement):
         :param field:
         :return:
         """
-        self.parent.add_text(field, self.gp_node.render(None, None))
+        self.parent.add_text(field, self.gp_node.render())
 
     def render(self, out_file):
         pass
