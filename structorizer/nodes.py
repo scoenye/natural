@@ -248,10 +248,8 @@ class WhileNode(Statement):
         Collect the terminals that make up the text for the instruction
         :return:
         """
-        for child in self.child_nodes:
-            if child.matches('<loop_statement_list>'):
-                break
-
+        # -1 cuts LOOP out of the loop
+        for child in self.child_nodes[:-1]:
             child.build('instruction')
 
 
