@@ -52,6 +52,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<COMPRESS>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_compute(self):
+        gp_node = grammar.ExpressionNode(1, '<COMPUTE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
+
     def test_define_data(self):
         gp_node = grammar.ExpressionNode(1, '<DEFINE_DATA>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
@@ -114,6 +118,10 @@ class StatementFactoryTest(unittest.TestCase):
 
     def test_move(self):
         gp_node = grammar.ExpressionNode(1, '<MOVE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
+
+    def test_obtain(self):
+        gp_node = grammar.ExpressionNode(1, '<OBTAIN>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_perform(self):
