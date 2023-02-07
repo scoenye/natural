@@ -271,7 +271,7 @@ class AlternativeNode(Statement):
 
     # Problem: logical expression starts at the same level as IF
     def open(self, out_file):
-        print('<alternative text="{instruction}" comment="" color="{color}">'.format(
+        print('<alternative text="({instruction})" comment="" color="{color}">'.format(
             instruction=' '.join(self.node_text['instruction']),
             color=self.color), file=out_file)
 
@@ -284,17 +284,24 @@ class AlternativeNode(Statement):
         :return:
         """
         # [0] contains the IF terminal, which Structorizer does not need
-        for child in self.child_nodes:
-            if child.matches('<logical_expression>'):
-                break
-        # This is (should be...) the logical expression.
-        child.build('instruction')
+        # The rest can be built as normal as the true/false branch classes
+        # are set up to collect wayward instruction terminals.
+        for child in self.child_nodes[1:]:
+            child.build('instruction')
 
 
 class AlternativeTrueNode(Statement):
     """
     Alternative statement True branch
     """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        # THEN branch has no instruction but this prevents unused
+        # terminals from reaching the parent IF statement.
+        self.node_text['instruction'] = []
+
     def open(self, out_file):
         print('<qTrue>', file=out_file)
 
@@ -306,6 +313,14 @@ class AlternativeFalseNode(Statement):
     """
     Alternative statement False branch
     """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        # ELSE branch has no instruction but this prevents unused
+        # terminals from reaching the parent IF statement.
+        self.node_text['instruction'] = []
+
     def open(self, out_file):
         print('<qFalse>', file=out_file)
 

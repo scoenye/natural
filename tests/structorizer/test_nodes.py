@@ -59,16 +59,23 @@ class AlternativeNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<alternative text="#TEST EQ 2" comment="" color="ffffff">\n'
+            self.assertEqual('<alternative text="(#TEST EQ 2)" comment="" color="ffffff">\n'
                              '</alternative>\n',
                              output.getvalue())
 
 
 class AlternativeTrueTest(unittest.TestCase):
     def setUp(self) -> None:
-        gp_expression = ExpressionNode(0, '<THEN_closed>')
+        self.grammar = ExpressionNode(0, '<THEN_closed>')
+        gp_then = ExpressionNode(1, '<THEN>')
+        self.grammar.add_node(1, gp_then)
+        gp_assign = ExpressionNode(1, '<anon_ASSIGN>')
+        self.grammar.add_node(1, gp_assign)
+        gp_assign.add_node(2, TerminalNode(2, '#J'))
+        gp_assign.add_node(2, TerminalNode(2, '='))
+        gp_assign.add_node(2, TerminalNode(2, '123'))
 
-        self.diagram_node = nodes.AlternativeTrueNode(gp_expression, None)
+        self.diagram_node = nodes.AlternativeTrueNode(self.grammar, None)
 
     def test_render(self):
         self.diagram_node.import_expressions(StatementFactory)
@@ -78,6 +85,8 @@ class AlternativeTrueTest(unittest.TestCase):
             self.diagram_node.render(output)
 
             self.assertEqual('<qTrue>\n'
+                             '<instruction text="#J = 123" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
                              '</qTrue>\n',
                              output.getvalue())
 
@@ -85,6 +94,14 @@ class AlternativeTrueTest(unittest.TestCase):
 class AlternativeFalseTest(unittest.TestCase):
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<ELSE_open>')
+        gp_else = ExpressionNode(1, '<ELSE>')
+        gp_expression.add_node(1, gp_else)
+        gp_else.add_node(2, TerminalNode(2, 'ELSE'))
+        gp_assign = ExpressionNode(1, '<anon_ASSIGN>')
+        gp_expression.add_node(1, gp_assign)
+        gp_assign.add_node(2, TerminalNode(2, '#C'))
+        gp_assign.add_node(2, TerminalNode(2, '='))
+        gp_assign.add_node(2, TerminalNode(2, '3'))
 
         self.diagram_node = nodes.AlternativeFalseNode(gp_expression, None)
 
@@ -96,6 +113,8 @@ class AlternativeFalseTest(unittest.TestCase):
             self.diagram_node.render(output)
 
             self.assertEqual('<qFalse>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
                              '</qFalse>\n',
                              output.getvalue())
 
