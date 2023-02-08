@@ -148,6 +148,7 @@ class CaseNode(Statement):
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
 
+        self.node_text['control'] = []
         self.node_text['branches'] = []
         self.node_text['comments'] = []
 
@@ -157,8 +158,11 @@ class CaseNode(Statement):
         # (in parentheses), subsequent strings the branch conditions.
         # The inner XML has as may qCase elements as there are conditions in the
         # case text parameter.
+        control = '&#34;({})&#34;'.format(' '.join(self.node_text['control']))
+        branches = ','.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']])
+
         print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
-            instruction=','.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']]),
+            instruction=','.join([control, branches]),
             comments=' '.join(self.node_text['comments']),
             color=self.color), file=out_file)
 
@@ -167,7 +171,12 @@ class CaseNode(Statement):
 
     def build(self, field):
         on_branches = False
+        of_found = False
 
+        # A tad messy, but then so is the Case statement: the <DECIDE_ON_conditions> expression
+        # separates the DECIDE statement from its branches. Inside the DECIDE statement, everything
+        # up to the <OF> expression becomes a comment. Everything after becomes part of the control
+        # text. The <OF> expression is discarded.
         for child in self.child_nodes:
             if child.matches('<DECIDE_ON_conditions>'):
                 on_branches = True
@@ -175,7 +184,13 @@ class CaseNode(Statement):
             if on_branches:
                 child.build('instruction')
             else:
-                child.build('comments')
+                if of_found:
+                    child.build('control')
+                else:
+                    if child.matches('<OF>'):
+                        of_found = True
+                    else:
+                        child.build('comments')
 
 
 class CaseBranch(Statement):

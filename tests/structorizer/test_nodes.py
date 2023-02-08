@@ -172,7 +172,7 @@ class CaseNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<case text="" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
+            self.assertEqual('<case text="&#34;()&#34;," comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
                              '</case>\n',
                              output.getvalue())
 
@@ -248,12 +248,17 @@ class DecideOnTest(unittest.TestCase):
         gp_decide_on.add_node(1, TerminalNode(1, 'ON'))
 
         gp_decide_which = ExpressionNode(1, '<DECIDE_which>')
+        gp_decide_on.add_node(1, gp_decide_which)
         gp_decide_which.add_node(2, TerminalNode(2, 'FIRST'))
         gp_decide_which.add_node(2, TerminalNode(2, 'VALUE'))
-        gp_decide_which.add_node(2, TerminalNode(2, 'OF'))
-        gp_decide_which.add_node(2, TerminalNode(2, '#LN-MEM-CD'))
 
-        gp_decide_on.add_node(1, gp_decide_which)
+        gp_decide_of = ExpressionNode(1, '<OF>')
+        gp_decide_on.add_node(1, gp_decide_of)
+        gp_decide_of.add_node(2, TerminalNode(2, 'OF'))
+
+        gp_decide_control = ExpressionNode(1, '<user_variable>')
+        gp_decide_on.add_node(1, gp_decide_control)
+        gp_decide_control.add_node(2, TerminalNode(2, '#LN-MEM-CD'))
 
         # First branch
         gp_branch = ExpressionNode(2,'<DECIDE_ON_branch>')
@@ -310,7 +315,7 @@ class DecideOnTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<case text="&#34;1S&#34;,&#34;2S&#34;,&#34;NONE&#34;" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
+            self.assertEqual('<case text="&#34;(#LN-MEM-CD)&#34;,&#34;1S&#34;,&#34;2S&#34;,&#34;NONE&#34;" comment="DECIDE ON FIRST VALUE" color="ffffff">\n'
                              '<qCase>\n'
                              '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n'
