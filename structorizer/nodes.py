@@ -158,7 +158,7 @@ class CaseNode(Statement):
         # The inner XML has as may qCase elements as there are conditions in the
         # case text parameter.
         print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
-            instruction=' '.join(self.node_text['branches']),
+            instruction=' '.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']]),
             comments=' '.join(self.node_text['comments']),
             color=self.color), file=out_file)
 
@@ -186,13 +186,21 @@ class CaseBranch(Statement):
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
 
-        self.node_text['instructions'] = []
+        self.node_text['instruction'] = []
 
     def open(self, out_file):
         print('<qCase>', file=out_file)
 
     def close(self, out_file):
         print('</qCase>', file=out_file)
+
+    def build(self, field):
+        # The first two nodes (trimmed and untrimmed) make up the condition, the remaining
+        # nodes the statement list. node[0] is the terminal 'VALUE' and can be omitted.
+        self.child_nodes[1].build('branches')
+
+        for child in self.child_nodes[2:]:
+            child.build('instruction')
 
 
 class ExitNode(Statement):
