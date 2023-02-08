@@ -33,6 +33,8 @@ class StatementFactory:
         'CALLNAT': nodes.CallNode,
         'COMPRESS': nodes.InstructionNode,
         'COMPUTE': nodes.InstructionNode,
+        'DECIDE_ON': nodes.CaseNode,
+        'DECIDE_ON_branch': nodes.CaseBranch,
         'DEFINE_DATA': nodes.InstructionNode,
         'DEFINE_WINDOW': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,

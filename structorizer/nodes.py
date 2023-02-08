@@ -140,6 +140,61 @@ class DiagramNode(Statement):
         print('</root>', file=out_file)
 
 
+class CaseNode(Statement):
+    """
+    Structorizer Case statement/Natural DECIDE outer XML
+    """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['branches'] = []
+        self.node_text['comments'] = []
+
+    def open(self, out_file):
+        # The Case branches are stored in the text field as a sequence of comma
+        # separated double-quoted strings. The first string contains the condition
+        # (in parentheses), subsequent strings the branch conditions.
+        # The inner XML has as may qCase elements as there are conditions in the
+        # case text parameter.
+        print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
+            instruction=' '.join(self.node_text['branches']),
+            comments=' '.join(self.node_text['comments']),
+            color=self.color), file=out_file)
+
+    def close(self, out_file):
+        print('</case>', file=out_file)
+
+    def build(self, field):
+        on_branches = False
+
+        for child in self.child_nodes:
+            if child.matches('<DECIDE_ON_conditions>'):
+                on_branches = True
+
+            if on_branches:
+                child.build('instruction')
+            else:
+                child.build('comments')
+
+
+class CaseBranch(Statement):
+    """
+    Structorizer qCase branch/Natural DECIDE branch.
+    This node delegates rendering to the parent CaseNode
+    """
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['instructions'] = []
+
+    def open(self, out_file):
+        print('<qCase>', file=out_file)
+
+    def close(self, out_file):
+        print('</qCase>', file=out_file)
+
+
 class ExitNode(Statement):
     """
     Structorizer Exit node

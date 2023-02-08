@@ -148,6 +148,69 @@ class CallNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
+class CaseNodeTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<DECIDE_ON>')
+        gp_expression.add_node(1, TerminalNode(1, 'DECIDE'))
+        gp_expression.add_node(1, TerminalNode(1, 'ON'))
+
+        gp_decide_which = ExpressionNode(1, '<DECIDE_which>')
+        gp_decide_which.add_node(2, TerminalNode(2, 'FIRST'))
+        gp_decide_which.add_node(2, TerminalNode(2, 'VALUE'))
+        gp_decide_which.add_node(2, TerminalNode(2, 'OF'))
+        gp_decide_which.add_node(2, TerminalNode(2, '#LN-MEM-CD'))
+
+        gp_expression.add_node(1, gp_decide_which)
+
+        self.diagram_node = nodes.CaseNode(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<case text="" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
+                             '</case>\n',
+                             output.getvalue())
+
+
+class CaseBranchTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0,'<DECIDE_ON_branch>')
+
+        gp_expression.add_node(1, TerminalNode(1, 'VALUE'))
+
+        gp_value = ExpressionNode(1, '<constant_alpha>')
+        gp_value.add_node(2, TerminalNode (2, '1S'))
+
+        gp_expression.add_node(1, gp_value)
+
+        gp_assign = ExpressionNode(1, '<anon_ASSIGN>')
+        gp_expression.add_node(1, gp_assign)
+        gp_assign.add_node(2, TerminalNode(2, '#C'))
+        gp_assign.add_node(2, TerminalNode(2, '='))
+        gp_assign.add_node(2, TerminalNode(2, '3'))
+
+        self.diagram_node = nodes.CaseBranch(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qCase>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n',
+                             output.getvalue())
+
+
 class ExitNodeTest(unittest.TestCase):
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<ESCAPE>')
