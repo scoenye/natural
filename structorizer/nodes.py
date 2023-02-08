@@ -203,6 +203,21 @@ class CaseBranch(Statement):
             child.build('instruction')
 
 
+class NoneBranch(CaseBranch):
+    """
+    The NoneBranch is essentially a CaseBranch, but with a slightly
+    different grammar: there is no VALUE terminal. The NONE terminal
+    takes its place and we do need it.
+    """
+
+    def build(self, field):
+        # node[0] is the NONE terminal.
+        self.child_nodes[0].build('branches')
+
+        for child in self.child_nodes[1:]:
+            child.build('instruction')
+
+
 class ExitNode(Statement):
     """
     Structorizer Exit node

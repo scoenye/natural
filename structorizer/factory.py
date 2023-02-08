@@ -35,6 +35,7 @@ class StatementFactory:
         'COMPUTE': nodes.InstructionNode,
         'DECIDE_ON': nodes.CaseNode,
         'DECIDE_ON_branch': nodes.CaseBranch,
+        'DECIDE_ON_none': nodes.NoneBranch,
         'DEFINE_DATA': nodes.InstructionNode,
         'DEFINE_WINDOW': nodes.InstructionNode,
 #        'DEFINE_SUBROUTINE': nodes.InstructionNode,

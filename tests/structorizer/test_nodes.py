@@ -211,6 +211,33 @@ class CaseBranchTest(unittest.TestCase):
                              output.getvalue())
 
 
+class CaseNoneTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0,'<DECIDE_ON_none>')
+        gp_expression.add_node(1, TerminalNode(1, 'NONE'))
+
+        gp_ignore = ExpressionNode(1, '<IGNORE>')
+        gp_expression.add_node(1, gp_ignore)
+
+        gp_ignore.add_node(2, TerminalNode (2, 'IGNORE'))
+
+        self.diagram_node = nodes.NoneBranch(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qCase>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n',
+                             output.getvalue())
+
+
 class DecideOnTest(unittest.TestCase):
     """
     Combined CaseNode/CaseBranch test
@@ -264,6 +291,16 @@ class DecideOnTest(unittest.TestCase):
         gp_assign.add_node(4, TerminalNode(4, '='))
         gp_assign.add_node(4, TerminalNode(4, '4'))
 
+        # None branch
+        gp_none = ExpressionNode(1, '<DECIDE_ON_none>')
+        gp_decide_on.add_node(1, gp_none)
+
+        gp_none.add_node(2, TerminalNode(2, 'NONE'))
+
+        gp_ignore = ExpressionNode(2, '<IGNORE>')
+        gp_ignore.add_node(3, TerminalNode(3, 'IGNORE'))
+        gp_none.add_node(2, gp_ignore)
+
         self.diagram_node = nodes.CaseNode(gp_decide_on, None)
 
     def test_render(self):
@@ -273,13 +310,17 @@ class DecideOnTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<case text="&#34;1S&#34;,&#34;2S&#34;" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
+            self.assertEqual('<case text="&#34;1S&#34;,&#34;2S&#34;,&#34;NONE&#34;" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
                              '<qCase>\n'
                              '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n'
                              '</qCase>\n'
                              '<qCase>\n'
                              '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n'
+                             '<qCase>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n'
                              '</qCase>\n'
                              '</case>\n',
