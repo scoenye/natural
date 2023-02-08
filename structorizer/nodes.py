@@ -158,7 +158,7 @@ class CaseNode(Statement):
         # The inner XML has as may qCase elements as there are conditions in the
         # case text parameter.
         print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
-            instruction=' '.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']]),
+            instruction=','.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']]),
             comments=' '.join(self.node_text['comments']),
             color=self.color), file=out_file)
 

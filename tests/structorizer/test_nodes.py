@@ -228,6 +228,7 @@ class DecideOnTest(unittest.TestCase):
 
         gp_decide_on.add_node(1, gp_decide_which)
 
+        # First branch
         gp_branch = ExpressionNode(2,'<DECIDE_ON_branch>')
         gp_decide_on.add_node(2, gp_branch)
 
@@ -245,6 +246,24 @@ class DecideOnTest(unittest.TestCase):
         gp_assign.add_node(4, TerminalNode(4, '='))
         gp_assign.add_node(4, TerminalNode(4, '3'))
 
+        # Second branch
+        gp_branch = ExpressionNode(2,'<DECIDE_ON_branch>')
+        gp_decide_on.add_node(2, gp_branch)
+
+        gp_branch.add_node(3, TerminalNode(3, 'VALUE'))
+
+        gp_value = ExpressionNode(3, '<constant_alpha>')
+        gp_value.add_node(4, TerminalNode (4, '2S'))
+
+        gp_branch.add_node(3, gp_value)
+
+        gp_assign = ExpressionNode(3, '<anon_ASSIGN>')
+        gp_branch.add_node(3, gp_assign)
+
+        gp_assign.add_node(4, TerminalNode(4, '#D'))
+        gp_assign.add_node(4, TerminalNode(4, '='))
+        gp_assign.add_node(4, TerminalNode(4, '4'))
+
         self.diagram_node = nodes.CaseNode(gp_decide_on, None)
 
     def test_render(self):
@@ -254,9 +273,13 @@ class DecideOnTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<case text="&#34;1S&#34;" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
+            self.assertEqual('<case text="&#34;1S&#34;,&#34;2S&#34;" comment="DECIDE ON FIRST VALUE OF #LN-MEM-CD" color="ffffff">\n'
                              '<qCase>\n'
                              '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n'
+                             '<qCase>\n'
+                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n'
                              '</qCase>\n'
                              '</case>\n',
