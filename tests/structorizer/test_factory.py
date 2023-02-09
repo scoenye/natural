@@ -148,6 +148,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<REPEAT>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.ForeverNode)
 
+    def test_repeat_while(self):
+        gp_node = grammar.ExpressionNode(1, '<REPEAT_WHILE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.WhileNode)
+
     def test_reset(self):
         gp_node = grammar.ExpressionNode(1, '<RESET>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
