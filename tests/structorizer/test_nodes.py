@@ -361,6 +361,26 @@ class ExitNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
+class ReinputTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<REINPUT>')
+        gp_expression.add_node(1, TerminalNode(1, 'REINPUT'))
+        gp_expression.add_node(1, TerminalNode(1, '''*WARNING*: You have changed the Override field from "Y".'''))
+
+        self.diagram_node = nodes.ExitNode(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<jump text="REINPUT ''*WARNING*: You have changed the Override field from &#34;&#34;Y&#34;&#34;.''" comment="" color="ffff80" rotated="0" disabled="0">\n'
+                             '</jump>\n',
+                             output.getvalue())
+
+
 class ForeverNodeTest(unittest.TestCase):
 
     def setUp(self) -> None:

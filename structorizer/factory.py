@@ -57,6 +57,7 @@ class StatementFactory:
         'OBTAIN': nodes.InstructionNode,
         'PERFORM': nodes.CallNode,
         'READ': nodes.DatabaseLoop,
+        'REINPUT': nodes.ExitNode,
         # 'REDEFINE': nodes.InstructionNode,
         'REPEAT': nodes.ForeverNode,
         'REPEAT_WHILE': nodes.WhileNode,

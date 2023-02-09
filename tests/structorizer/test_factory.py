@@ -144,6 +144,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<READ>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseLoop)
 
+    def test_reinput(self):
+        gp_node = grammar.ExpressionNode(1, '<REINPUT>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.ExitNode)
+
     def test_repeat(self):
         gp_node = grammar.ExpressionNode(1, '<REPEAT>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.ForeverNode)

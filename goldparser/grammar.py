@@ -110,7 +110,7 @@ class TerminalNode(GrammarNode):
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
-        '"': '&quot;'
+        '"': '&#34;&#34;'
     })
 
     def add_node(self, level, child):
