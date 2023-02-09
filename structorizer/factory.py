@@ -62,8 +62,9 @@ class StatementFactory:
         'REPEAT': nodes.ForeverNode,
         'REPEAT_WHILE': nodes.WhileNode,
         'RESET': nodes.InstructionNode,
-        'SUBTRACT': nodes.InstructionNode,
         'SET_KEY': nodes.InstructionNode,
+        'SUBTRACT': nodes.InstructionNode,
+        'STACK': nodes.InstructionNode,
         'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
         'UPDATE': nodes.DatabaseInstruction,        # TODO: place assignments on separate lines
         'END': nodes.InstructionNode

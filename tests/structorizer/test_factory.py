@@ -168,6 +168,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<SET_KEY>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_stack(self):
+        gp_node = grammar.ExpressionNode(1, '<STACK>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
+
     def test_store(self):
         gp_node = grammar.ExpressionNode(1, '<STORE>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
