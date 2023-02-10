@@ -489,3 +489,20 @@ class DiagramTerminal(Statement):
 
     def render(self, out_file):
         pass
+
+
+class NullStatement(Statement):
+    """
+    Statement passes all terminals to parent instances. NullStatement
+    absorbs the 'instruction' terminals. The intended use is to
+    prevent unwanted statements (like REDEFINE) from leaking into other
+    statements.
+    """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['instruction'] = []
+
+    def render(self, out_file):
+        pass

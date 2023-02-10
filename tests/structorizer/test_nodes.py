@@ -508,5 +508,23 @@ class WhileNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
+class NullStatementTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<^>')
+        gp_terminal = TerminalNode(1, 'TEST')
+        gp_expression.add_node(1, gp_terminal)
+
+        self.diagram_node = nodes.NullStatement(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('', output.getvalue())
+
+
 if __name__ == '__main__':
     unittest.main()

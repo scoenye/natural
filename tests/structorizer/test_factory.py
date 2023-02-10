@@ -184,6 +184,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<END>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_null(self):
+        gp_node = grammar.ExpressionNode(1, '<^>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.NullStatement)
+
 
 if __name__ == '__main__':
     unittest.main()

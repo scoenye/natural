@@ -58,7 +58,7 @@ class StatementFactory:
         'PERFORM': nodes.CallNode,
         'READ': nodes.DatabaseLoop,
         'REINPUT': nodes.ExitNode,
-        # 'REDEFINE': nodes.InstructionNode,
+        'REDEFINE': nodes.NullStatement,
         'REPEAT': nodes.ForeverNode,
         'REPEAT_WHILE': nodes.WhileNode,
         'RESET': nodes.InstructionNode,
@@ -67,7 +67,8 @@ class StatementFactory:
         'STACK': nodes.InstructionNode,
         'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
         'UPDATE': nodes.DatabaseInstruction,        # TODO: place assignments on separate lines
-        'END': nodes.InstructionNode
+        'END': nodes.InstructionNode,
+        '^': nodes.NullStatement
     }
 
     @staticmethod
