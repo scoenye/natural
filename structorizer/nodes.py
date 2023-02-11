@@ -351,7 +351,6 @@ class WhileNode(Statement):
         Collect the terminals that make up the text for the instruction
         :return:
         """
-        # -1 cuts LOOP out of the loop
         for child in self.child_nodes[:-1]:
             child.build('instruction')
 
@@ -472,6 +471,35 @@ class CallNode(InstructionNode):
 
 class DatabaseInstruction(InstructionNode):
     color = '80ff80'        # Green
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['assignments'] = []
+
+    def open(self, out_file):
+        statement = '&#34;{}&#34;'.format(' '.join(self.node_text['instruction']))
+        assignments = ','.join(['&#34;  {}&#34;'.format(assignment) for assignment in self.node_text['assignments']])
+
+        instruction = [statement, assignments]
+
+        print('<instruction text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
+            instruction=','.join(instruction),
+            color=self.color), file=out_file)
+
+    # In order to put the field assignments on separate line, the database
+    # instruction needs to be separated from the contained instructions.
+    def build(self, field):
+        db_instruction = True
+
+        for child in self.child_nodes:
+            if child.matches('<UPDATE_source>'):
+                db_instruction = False
+
+            if db_instruction:
+                child.build('instruction')
+            else:
+                child.build('assignments')
 
 
 class DBAssignment(Statement):
