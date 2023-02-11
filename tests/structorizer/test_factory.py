@@ -40,6 +40,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<ASSIGN>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_assignment_all(self):
+        gp_node = grammar.ExpressionNode(1, '<assignment_all>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DBAssignment)
+
     def test_anon_assign(self):
         gp_node = grammar.ExpressionNode(1, '<anon_ASSIGN>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)

@@ -474,6 +474,25 @@ class DatabaseInstruction(InstructionNode):
     color = '80ff80'        # Green
 
 
+class DBAssignment(Statement):
+    """
+    Assembles the parts of a database assignment into a single line
+    """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['instruction'] = []
+
+    def build(self, field):
+        # Collect the parts making up this assignment
+        for child in self.child_nodes:
+            child.build('instruction')
+
+        # Assemble the pieces and send them to the parent node
+        self.parent.add_text(field, ' '.join(self.node_text['instruction']))
+
+
 class DiagramTerminal(Statement):
     """
     Diagram equivalent of the grammar side DiagramTerminal

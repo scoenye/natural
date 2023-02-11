@@ -20,6 +20,8 @@
 import io
 import unittest
 
+from unittest.mock import MagicMock
+
 from structorizer import nodes
 from structorizer.factory import StatementFactory
 
@@ -470,6 +472,25 @@ class InstructionNodeTest(unittest.TestCase):
             self.assertEqual('<instruction text="TEST" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n',
                              output.getvalue())
+
+
+class DBAssignmentTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        db_assign = ExpressionNode(0, '<assignment_all>')
+
+        db_assign.add_node(1, TerminalNode(1, 'EXT-RPTGRP-ID'))
+        db_assign.add_node(1, TerminalNode(1, '='))
+        db_assign.add_node(1, TerminalNode(1, '#SSN'))
+
+        self.db_node = MagicMock()
+        self.assign_node = nodes.DBAssignment(db_assign, self.db_node)
+
+    def test_build(self):
+        self.assign_node.import_expressions(StatementFactory)
+        self.assign_node.build('assignments')
+        self.assertListEqual(['EXT-RPTGRP-ID', '=', '#SSN'], self.assign_node.node_text['instruction'])
+        self.db_node.add_text.assert_called_with('assignments', 'EXT-RPTGRP-ID = #SSN')
 
 
 class WhileNodeTest(unittest.TestCase):

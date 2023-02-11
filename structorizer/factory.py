@@ -67,6 +67,7 @@ class StatementFactory:
         'STACK': nodes.InstructionNode,
         'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
         'UPDATE': nodes.DatabaseInstruction,        # TODO: place assignments on separate lines
+        'assignment_all': nodes.DBAssignment,       # <assignment_all> is specific to STORE and UPDATE
         'END': nodes.InstructionNode,
         '^': nodes.NullStatement
     }
