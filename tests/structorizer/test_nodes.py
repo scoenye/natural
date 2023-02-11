@@ -474,7 +474,7 @@ class InstructionNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
-class DatabaseInstructionTest(unittest.TestCase):
+class DatabaseUpdateTest(unittest.TestCase):
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<UPDATE>')
         gp_expression.add_node(1, TerminalNode(1, 'UPDATE'))
@@ -509,6 +509,45 @@ class DatabaseInstructionTest(unittest.TestCase):
             self.diagram_node.render(output)
 
             self.assertEqual('<instruction text="&#34;UPDATE ( 1234 )&#34;,&#34;  EXT-RPTGRP-ID = #SSN&#34;,&#34;  APPLICANT-NAME = #NAME&#34;" comment="" color="80ff80" rotated="0" disabled="0">\n'
+                             '</instruction>\n',
+                             output.getvalue())
+
+
+class DatabaseStoreTest(unittest.TestCase):
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<STORE>')
+        gp_expression.add_node(1, TerminalNode(1, 'STORE'))
+        gp_expression.add_node(1, TerminalNode(1, '('))
+        gp_expression.add_node(1, TerminalNode(1, '1234'))
+        gp_expression.add_node(1, TerminalNode(1, ')'))
+
+        db_source = ExpressionNode(1, '<STORE_how>')
+        gp_expression.add_node(1, db_source)
+
+        db_assign_1 = ExpressionNode(2, '<assignment_all>')
+        db_source.add_node(2, db_assign_1)
+
+        db_assign_1.add_node(3, TerminalNode(3, 'EXT-RPTGRP-ID'))
+        db_assign_1.add_node(3, TerminalNode(3, '='))
+        db_assign_1.add_node(3, TerminalNode(3, '#SSN'))
+
+        db_assign_2 = ExpressionNode(2, '<assignment_all>')
+        db_source.add_node(2, db_assign_2)
+
+        db_assign_2.add_node(3, TerminalNode(3, 'APPLICANT-NAME'))
+        db_assign_2.add_node(3, TerminalNode(3, '='))
+        db_assign_2.add_node(3, TerminalNode(3, '#NAME'))
+
+        self.diagram_node = nodes.DatabaseInstruction(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<instruction text="&#34;STORE ( 1234 )&#34;,&#34;  EXT-RPTGRP-ID = #SSN&#34;,&#34;  APPLICANT-NAME = #NAME&#34;" comment="" color="80ff80" rotated="0" disabled="0">\n'
                              '</instruction>\n',
                              output.getvalue())
 

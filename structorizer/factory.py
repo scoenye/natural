@@ -65,7 +65,7 @@ class StatementFactory:
         'SET_KEY': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
         'STACK': nodes.InstructionNode,
-        'STORE': nodes.DatabaseInstruction,         # TODO: place assignments on separate lines
+        'STORE': nodes.DatabaseInstruction,
         'UPDATE': nodes.DatabaseInstruction,
         'assignment_all': nodes.DBAssignment,       # <assignment_all> is specific to STORE and UPDATE
         'END': nodes.InstructionNode,

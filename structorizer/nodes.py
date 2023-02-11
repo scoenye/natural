@@ -489,11 +489,16 @@ class DatabaseInstruction(InstructionNode):
 
     # In order to put the field assignments on separate line, the database
     # instruction needs to be separated from the contained instructions.
+    # It is possible to do it without this build method, but then the
+    # DBAssignment build method would need the 'assignments' target hardcoded.
     def build(self, field):
         db_instruction = True
 
         for child in self.child_nodes:
-            if child.matches('<UPDATE_source>'):
+            # This also splits USING SAME to the next line. Overcoming that will
+            # need some changes to the grammar and another intermediate diagram
+            # node to send SAME to 'instructions' and SET/WITH to 'assignments'
+            if child.matches('<UPDATE_source>') or child.matches('<STORE_how>'):
                 db_instruction = False
 
             if db_instruction:
