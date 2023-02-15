@@ -140,7 +140,7 @@ class DiagramNode(Statement):
         print('</root>', file=out_file)
 
 
-class CaseNode(Statement):
+class ToCaseNode(Statement):
     """
     Structorizer Case statement/Natural DECIDE outer XML
     """
@@ -193,10 +193,10 @@ class CaseNode(Statement):
                         child.build('comments')
 
 
-class CaseBranch(Statement):
+class ToCaseBranch(Statement):
     """
     Structorizer qCase branch/Natural DECIDE branch.
-    This node delegates rendering to the parent CaseNode
+    This node delegates rendering to the parent ToCaseNode
     """
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
@@ -218,9 +218,9 @@ class CaseBranch(Statement):
             child.build('instruction')
 
 
-class NoneBranch(CaseBranch):
+class ToNoneBranch(ToCaseBranch):
     """
-    The NoneBranch is essentially a CaseBranch, but with a slightly
+    The ToNoneBranch is essentially a ToCaseBranch, but with a slightly
     different grammar: there is no VALUE terminal. The NONE terminal
     takes its place and we do need it.
     """
@@ -306,7 +306,7 @@ class ForCaseBranch(Statement):
 
 class ForNoneBranch(ForCaseBranch):
     """
-    The NoneBranch is essentially a CaseBranch, but with a slightly
+    The ToNoneBranch is essentially a ToCaseBranch, but with a slightly
     different grammar: there is no VALUE terminal. The NONE terminal
     takes its place and we do need it.
     """

@@ -165,7 +165,7 @@ class ToCaseNodeTest(unittest.TestCase):
 
         gp_expression.add_node(1, gp_decide_which)
 
-        self.diagram_node = nodes.CaseNode(gp_expression, None)
+        self.diagram_node = nodes.ToCaseNode(gp_expression, None)
 
     def test_render(self):
         self.diagram_node.import_expressions(StatementFactory)
@@ -197,7 +197,7 @@ class ToCaseBranchTest(unittest.TestCase):
         gp_assign.add_node(2, TerminalNode(2, '='))
         gp_assign.add_node(2, TerminalNode(2, '3'))
 
-        self.diagram_node = nodes.CaseBranch(gp_expression, None)
+        self.diagram_node = nodes.ToCaseBranch(gp_expression, None)
 
     def test_render(self):
         self.diagram_node.import_expressions(StatementFactory)
@@ -224,7 +224,7 @@ class ToCaseNoneTest(unittest.TestCase):
 
         gp_ignore.add_node(2, TerminalNode (2, 'IGNORE'))
 
-        self.diagram_node = nodes.NoneBranch(gp_expression, None)
+        self.diagram_node = nodes.ToNoneBranch(gp_expression, None)
 
     def test_render(self):
         self.diagram_node.import_expressions(StatementFactory)
@@ -242,7 +242,7 @@ class ToCaseNoneTest(unittest.TestCase):
 
 class ToDecideOnTest(unittest.TestCase):
     """
-    Combined CaseNode/CaseBranch test for the DECIDE ON statement
+    Combined ToCaseNode/ToCaseBranch test for the DECIDE ON statement
     """
     def setUp(self) -> None:
         gp_decide_on = ExpressionNode(0, '<DECIDE_ON>')
@@ -308,7 +308,7 @@ class ToDecideOnTest(unittest.TestCase):
         gp_ignore.add_node(3, TerminalNode(3, 'IGNORE'))
         gp_none.add_node(2, gp_ignore)
 
-        self.diagram_node = nodes.CaseNode(gp_decide_on, None)
+        self.diagram_node = nodes.ToCaseNode(gp_decide_on, None)
 
     def test_render(self):
         self.diagram_node.import_expressions(StatementFactory)
@@ -434,7 +434,7 @@ class ForCaseNoneTest(unittest.TestCase):
 
 class DecideForTest(unittest.TestCase):
     """
-    Combined CaseNode/CaseBranch test for the DECIDE FOR statement
+    Combined ToCaseNode/ToCaseBranch test for the DECIDE FOR statement
     """
     def setUp(self) -> None:
         gp_decide_for = ExpressionNode(0, '<DECIDE_FOR>')
