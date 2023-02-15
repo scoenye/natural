@@ -178,7 +178,7 @@ class CaseNode(Statement):
         # up to the <OF> expression becomes a comment. Everything after becomes part of the control
         # text. The <OF> expression is discarded.
         for child in self.child_nodes:
-            if child.matches('<DECIDE_ON_conditions>'):
+            if child.matches('<DECIDE_ON_conditions>') or child.matches('<DECIDE_FOR_conditions>'):
                 on_branches = True
 
             if on_branches:
@@ -230,6 +230,92 @@ class NoneBranch(CaseBranch):
         self.child_nodes[0].build('branches')
 
         for child in self.child_nodes[1:]:
+            child.build('instruction')
+
+
+class ForCaseNode(Statement):
+    """
+    Structorizer Case statement/Natural DECIDE FOR outer XML
+    """
+
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['branches'] = []
+        self.node_text['comments'] = []
+
+    def open(self, out_file):
+        # The Case branches are stored in the text field as a sequence of comma
+        # separated double-quoted strings.
+        # The inner XML has as may qCase elements as there are conditions in the
+        # case text parameter.
+        control = '&#34;(*)&#34;'
+        branches = ','.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']])
+
+        print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
+            instruction=','.join([control, branches]),
+            comments=' '.join(self.node_text['comments']),
+            color=self.color), file=out_file)
+
+    def close(self, out_file):
+        print('</case>', file=out_file)
+
+    def build(self, field):
+        on_branches = False
+
+        # A tad messy, but then so is the Case statement: the <DECIDE_FOR_conditions> expression
+        # separates the DECIDE statement from its branches. Inside the DECIDE statement, everything
+        # up to the <DECIDE_FOR_conditions> expression becomes a comment.
+        for child in self.child_nodes:
+            if child.matches('<DECIDE_FOR_conditions>'):
+                on_branches = True
+
+            if on_branches:
+                child.build('instruction')
+            else:
+                child.build('comments')
+
+
+class ForCaseBranch(Statement):
+    """
+    Structorizer qCase branch/Natural DECIDE FOR branch.
+    This node delegates rendering to the parent ForCaseNode
+    """
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['instruction'] = []
+        self.node_text['condition'] = []
+
+    def open(self, out_file):
+        print('<qCase>', file=out_file)
+
+    def close(self, out_file):
+        print('</qCase>', file=out_file)
+
+    def build(self, field):
+        # The first node is the WHEN terminal, which is ignored. The second node
+        # is the anchor of the branch condition. Any remaining nodes make up the
+        # branch's instructions.
+        self.child_nodes[1].build('condition')   # Collect the parts here
+        self.parent.add_text('branches', ' '.join(self.node_text['condition']))
+
+        for child in self.child_nodes[2:]:
+            child.build('instruction')
+
+
+class ForNoneBranch(ForCaseBranch):
+    """
+    The NoneBranch is essentially a CaseBranch, but with a slightly
+    different grammar: there is no VALUE terminal. The NONE terminal
+    takes its place and we do need it.
+    """
+
+    def build(self, field):
+        # node[0] is the WHEN terminal.
+        self.child_nodes[1].build('branches')
+
+        for child in self.child_nodes[2:]:
             child.build('instruction')
 
 

@@ -150,7 +150,7 @@ class CallNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
-class CaseNodeTest(unittest.TestCase):
+class ToCaseNodeTest(unittest.TestCase):
 
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0, '<DECIDE_ON>')
@@ -179,7 +179,7 @@ class CaseNodeTest(unittest.TestCase):
                              output.getvalue())
 
 
-class CaseBranchTest(unittest.TestCase):
+class ToCaseBranchTest(unittest.TestCase):
 
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0,'<DECIDE_ON_branch>')
@@ -213,7 +213,7 @@ class CaseBranchTest(unittest.TestCase):
                              output.getvalue())
 
 
-class CaseNoneTest(unittest.TestCase):
+class ToCaseNoneTest(unittest.TestCase):
 
     def setUp(self) -> None:
         gp_expression = ExpressionNode(0,'<DECIDE_ON_none>')
@@ -240,9 +240,9 @@ class CaseNoneTest(unittest.TestCase):
                              output.getvalue())
 
 
-class DecideOnTest(unittest.TestCase):
+class ToDecideOnTest(unittest.TestCase):
     """
-    Combined CaseNode/CaseBranch test
+    Combined CaseNode/CaseBranch test for the DECIDE ON statement
     """
     def setUp(self) -> None:
         gp_decide_on = ExpressionNode(0, '<DECIDE_ON>')
@@ -318,6 +318,201 @@ class DecideOnTest(unittest.TestCase):
             self.diagram_node.render(output)
 
             self.assertEqual('<case text="&#34;(#LN-MEM-CD)&#34;,&#34;1S&#34;,&#34;2S&#34;,&#34;NONE&#34;" comment="DECIDE ON FIRST VALUE" color="ffffff">\n'
+                             '<qCase>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n'
+                             '<qCase>\n'
+                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n'
+                             '<qCase>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n'
+                             '</case>\n',
+                             output.getvalue())
+
+
+class ForCaseNodeTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0, '<DECIDE_FOR>')
+        gp_expression.add_node(1, TerminalNode(1, 'DECIDE'))
+        gp_expression.add_node(1, TerminalNode(1, 'FOR'))
+
+        gp_decide_which = ExpressionNode(1, '<DECIDE_which>')
+        gp_decide_which.add_node(2, TerminalNode(2, 'EVERY'))
+
+        gp_expression.add_node(1, gp_decide_which)
+
+        gp_expression.add_node(1, TerminalNode(1, 'CONDITION'))
+
+        self.diagram_node = nodes.ForCaseNode(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<case text="&#34;(*)&#34;," comment="DECIDE FOR EVERY CONDITION" color="ffffff">\n'
+                             '</case>\n',
+                             output.getvalue())
+
+
+class ForCaseBranchTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0,'<DECIDE_FOR_branch>')
+
+        gp_expression.add_node(1, TerminalNode(1, 'WHEN'))
+
+        gp_condition = ExpressionNode(1, '<logical_criterion>')
+        gp_expression.add_node(1, gp_condition)
+
+        gp_condition.add_node(2, TerminalNode (2, '#FOO'))
+        gp_condition.add_node(2, TerminalNode(2, 'EQ'))
+        gp_condition.add_node(2, TerminalNode(2, '#BAR'))
+
+        gp_assign = ExpressionNode(1, '<anon_ASSIGN>')
+        gp_expression.add_node(1, gp_assign)
+
+        gp_assign.add_node(2, TerminalNode(2, '#C'))
+        gp_assign.add_node(2, TerminalNode(2, '='))
+        gp_assign.add_node(2, TerminalNode(2, '3'))
+
+        # ForCaseBranch requires a parent to report the branch condition to.
+        # No parent -> kaboom.
+        self.for_case_node = MagicMock()
+        self.diagram_node = nodes.ForCaseBranch(gp_expression, self.for_case_node)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        self.for_case_node.add_text.assert_called_with('branches', '#FOO EQ #BAR')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qCase>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n',
+                             output.getvalue())
+
+
+class ForCaseNoneTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        gp_expression = ExpressionNode(0,'<DECIDE_FOR_none>')
+        gp_expression.add_node(1, TerminalNode(1, 'WHEN'))
+        gp_expression.add_node(1, TerminalNode(1, 'NONE'))
+
+        gp_ignore = ExpressionNode(1, '<IGNORE>')
+        gp_expression.add_node(1, gp_ignore)
+
+        gp_ignore.add_node(2, TerminalNode (2, 'IGNORE'))
+
+        self.diagram_node = nodes.ForNoneBranch(gp_expression, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<qCase>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
+                             '</instruction>\n'
+                             '</qCase>\n',
+                             output.getvalue())
+
+
+class DecideForTest(unittest.TestCase):
+    """
+    Combined CaseNode/CaseBranch test for the DECIDE FOR statement
+    """
+    def setUp(self) -> None:
+        gp_decide_for = ExpressionNode(0, '<DECIDE_FOR>')
+        gp_decide_for.add_node(1, TerminalNode(1, 'DECIDE'))
+        gp_decide_for.add_node(1, TerminalNode(1, 'FOR'))
+
+        gp_decide_which = ExpressionNode(1, '<DECIDE_which>')
+        gp_decide_for.add_node(1, gp_decide_which)
+
+        gp_decide_which.add_node(2, TerminalNode(2, 'EVERY'))
+
+        gp_decide_for.add_node(1, TerminalNode(1, 'CONDITION'))
+
+        gp_branches = ExpressionNode(1, '<DECIDE_FOR_conditions>')
+        gp_decide_for.add_node(1, gp_branches)
+
+        # First branch
+        gp_branch = ExpressionNode(2,'<DECIDE_FOR_branch>')
+        gp_decide_for.add_node(2, gp_branch)
+
+        gp_branch.add_node(3, TerminalNode(3, 'WHEN'))
+
+        gp_condition = ExpressionNode(3, '<logical_expression>')
+        gp_branch.add_node(3, gp_condition)
+
+        gp_condition.add_node(4, TerminalNode(4, '#FOO'))
+        gp_condition.add_node(4, TerminalNode(4, 'EQ'))
+        gp_condition.add_node(4, TerminalNode(4, '#BAR'))
+
+        gp_assign = ExpressionNode(3, '<anon_ASSIGN>')
+        gp_branch.add_node(3, gp_assign)
+
+        gp_assign.add_node(4, TerminalNode(4, '#C'))
+        gp_assign.add_node(4, TerminalNode(4, '='))
+        gp_assign.add_node(4, TerminalNode(4, '3'))
+
+        # Second branch
+        gp_branch = ExpressionNode(2,'<DECIDE_FOR_branch>')
+        gp_decide_for.add_node(2, gp_branch)
+
+        gp_branch.add_node(3, TerminalNode(3, 'WHEN'))
+
+        gp_condition = ExpressionNode(3, '<logical_expression>')
+        gp_branch.add_node(3, gp_condition)
+
+        gp_condition.add_node(4, TerminalNode(4, '#BAZ'))
+        gp_condition.add_node(4, TerminalNode(4, 'EQ'))
+        gp_condition.add_node(4, TerminalNode(4, '123'))
+
+        gp_assign = ExpressionNode(3, '<anon_ASSIGN>')
+        gp_branch.add_node(3, gp_assign)
+
+        gp_assign.add_node(4, TerminalNode(4, '#D'))
+        gp_assign.add_node(4, TerminalNode(4, '='))
+        gp_assign.add_node(4, TerminalNode(4, '4'))
+
+        # None branch
+        gp_none = ExpressionNode(2,'<DECIDE_FOR_none>')
+        gp_decide_for.add_node(2, gp_none)
+
+        gp_none.add_node(3, TerminalNode(3, 'WHEN'))
+        gp_none.add_node(3, TerminalNode(3, 'NONE'))
+
+        gp_ignore = ExpressionNode(3, '<IGNORE>')
+        gp_none.add_node(3, gp_ignore)
+
+        gp_ignore.add_node(4, TerminalNode (4, 'IGNORE'))
+
+        self.diagram_node = nodes.ForCaseNode(gp_decide_for, None)
+
+    def test_render(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('instruction')
+
+        with io.StringIO() as output:
+            self.diagram_node.render(output)
+
+            self.assertEqual('<case text="&#34;(*)&#34;,&#34;#FOO EQ #BAR&#34;,&#34;#BAZ EQ 123&#34;,&#34;NONE&#34;" comment="DECIDE FOR EVERY CONDITION" color="ffffff">\n'
                              '<qCase>\n'
                              '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
                              '</instruction>\n'
