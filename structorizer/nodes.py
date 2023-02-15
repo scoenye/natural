@@ -140,17 +140,16 @@ class DiagramNode(Statement):
         print('</root>', file=out_file)
 
 
-class ToCaseNode(Statement):
-    """
-    Structorizer Case statement/Natural DECIDE outer XML
-    """
-
+class CaseNode(Statement):
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
 
         self.node_text['control'] = []
         self.node_text['branches'] = []
         self.node_text['comments'] = []
+
+    def close(self, out_file):
+        print('</case>', file=out_file)
 
     def open(self, out_file):
         # The Case branches are stored in the text field as a sequence of comma
@@ -166,8 +165,27 @@ class ToCaseNode(Statement):
             comments=' '.join(self.node_text['comments']),
             color=self.color), file=out_file)
 
+
+class CaseBranch(Statement):
+    """
+    Base for the DECIDE FOR and DECIDE ON branches
+    """
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['instruction'] = []
+
+    def open(self, out_file):
+        print('<qCase>', file=out_file)
+
     def close(self, out_file):
-        print('</case>', file=out_file)
+        print('</qCase>', file=out_file)
+
+
+class ToCaseNode(CaseNode):
+    """
+    Structorizer Case statement/Natural DECIDE outer XML
+    """
 
     def build(self, field):
         on_branches = False
@@ -178,7 +196,7 @@ class ToCaseNode(Statement):
         # up to the <OF> expression becomes a comment. Everything after becomes part of the control
         # text. The <OF> expression is discarded.
         for child in self.child_nodes:
-            if child.matches('<DECIDE_ON_conditions>') or child.matches('<DECIDE_FOR_conditions>'):
+            if child.matches('<DECIDE_ON_conditions>'):
                 on_branches = True
 
             if on_branches:
@@ -193,21 +211,11 @@ class ToCaseNode(Statement):
                         child.build('comments')
 
 
-class ToCaseBranch(Statement):
+class ToCaseBranch(CaseBranch):
     """
     Structorizer qCase branch/Natural DECIDE branch.
     This node delegates rendering to the parent ToCaseNode
     """
-    def __init__(self, gp_node, parent):
-        super().__init__(gp_node, parent)
-
-        self.node_text['instruction'] = []
-
-    def open(self, out_file):
-        print('<qCase>', file=out_file)
-
-    def close(self, out_file):
-        print('</qCase>', file=out_file)
 
     def build(self, field):
         # The first two nodes (trimmed and untrimmed) make up the condition, the remaining
@@ -233,32 +241,14 @@ class ToNoneBranch(ToCaseBranch):
             child.build('instruction')
 
 
-class ForCaseNode(Statement):
+class ForCaseNode(CaseNode):
     """
     Structorizer Case statement/Natural DECIDE FOR outer XML
     """
-
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
 
-        self.node_text['branches'] = []
-        self.node_text['comments'] = []
-
-    def open(self, out_file):
-        # The Case branches are stored in the text field as a sequence of comma
-        # separated double-quoted strings.
-        # The inner XML has as may qCase elements as there are conditions in the
-        # case text parameter.
-        control = '&#34;(*)&#34;'
-        branches = ','.join(['&#34;{}&#34;'.format(branch) for branch in self.node_text['branches']])
-
-        print('<case text="{instruction}" comment="{comments}" color="{color}">'.format(
-            instruction=','.join([control, branches]),
-            comments=' '.join(self.node_text['comments']),
-            color=self.color), file=out_file)
-
-    def close(self, out_file):
-        print('</case>', file=out_file)
+        self.node_text['control'] = ['*']
 
     def build(self, field):
         on_branches = False
@@ -276,7 +266,7 @@ class ForCaseNode(Statement):
                 child.build('comments')
 
 
-class ForCaseBranch(Statement):
+class ForCaseBranch(CaseBranch):
     """
     Structorizer qCase branch/Natural DECIDE FOR branch.
     This node delegates rendering to the parent ForCaseNode
@@ -284,14 +274,7 @@ class ForCaseBranch(Statement):
     def __init__(self, gp_node, parent):
         super().__init__(gp_node, parent)
 
-        self.node_text['instruction'] = []
         self.node_text['condition'] = []
-
-    def open(self, out_file):
-        print('<qCase>', file=out_file)
-
-    def close(self, out_file):
-        print('</qCase>', file=out_file)
 
     def build(self, field):
         # The first node is the WHEN terminal, which is ignored. The second node
