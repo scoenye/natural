@@ -318,7 +318,7 @@ class ExitNode(Statement):
         print('<jump text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
             instruction=' '.join(self.node_text['instruction']),
             color=self.color),
-            file=out_file)
+            end='', file=out_file)
 
     def close(self, out_file):
         print('</jump>', file=out_file)
@@ -512,7 +512,7 @@ class InstructionNode(Statement):
     def open(self, out_file):
         print('<instruction text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
             instruction=' '.join(self.node_text['instruction']),
-            color=self.color), file=out_file)
+            color=self.color), end='', file=out_file)
 
     def close(self, out_file):
         print('</instruction>', file=out_file)
@@ -532,7 +532,7 @@ class CallNode(InstructionNode):
     def open(self, out_file):
         print('<call text="{instruction}" comment="" color="{color}" rotated="0" disabled="0">'.format(
             instruction=' '.join(self.node_text['instruction']),
-            color=self.color), file=out_file)
+            color=self.color), end='', file=out_file)
 
     def close(self, out_file):
         print('</call>', file=out_file)

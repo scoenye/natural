@@ -86,11 +86,11 @@ class AlternativeTrueTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<qTrue>\n'
-                             '<instruction text="#J = 123" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
-                             '</qTrue>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<qTrue>\n'
+                '<instruction text="#J = 123" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
+                '</qTrue>\n',
+                output.getvalue())
 
 
 class AlternativeFalseTest(unittest.TestCase):
@@ -114,11 +114,11 @@ class AlternativeFalseTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<qFalse>\n'
-                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
-                             '</qFalse>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<qFalse>\n'
+                '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
+                '</qFalse>\n',
+                output.getvalue())
 
 
 class CallNodeTest(unittest.TestCase):
@@ -145,8 +145,7 @@ class CallNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<call text="PERFORM" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</call>\n',
+            self.assertEqual('<call text="PERFORM" comment="" color="ffffff" rotated="0" disabled="0"></call>\n',
                              output.getvalue())
 
 
@@ -206,11 +205,11 @@ class ToCaseBranchTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<qCase>\n'
-                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
-                             '</qCase>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<qCase>\n'
+                '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
+                '</qCase>\n',
+                output.getvalue())
 
 
 class ToCaseNoneTest(unittest.TestCase):
@@ -233,11 +232,11 @@ class ToCaseNoneTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<qCase>\n'
-                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
-                             '</qCase>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<qCase>\n'
+                '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
+                '</qCase>\n',
+                output.getvalue())
 
 
 class ToDecideOnTest(unittest.TestCase):
@@ -319,16 +318,13 @@ class ToDecideOnTest(unittest.TestCase):
 
             self.assertEqual('<case text="&#34;(#LN-MEM-CD)&#34;,&#34;1S&#34;,&#34;2S&#34;,&#34;NONE&#34;" comment="DECIDE ON FIRST VALUE" color="ffffff">\n'
                              '<qCase>\n'
-                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '<qCase>\n'
-                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '<qCase>\n'
-                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '</case>\n',
                              output.getvalue())
@@ -398,8 +394,7 @@ class ForCaseBranchTest(unittest.TestCase):
             self.diagram_node.render(output)
 
             self.assertEqual('<qCase>\n'
-                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n',
                              output.getvalue())
 
@@ -425,11 +420,11 @@ class ForCaseNoneTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<qCase>\n'
-                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
-                             '</qCase>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<qCase>\n'
+                '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
+                '</qCase>\n',
+                output.getvalue())
 
 
 class DecideForTest(unittest.TestCase):
@@ -514,16 +509,13 @@ class DecideForTest(unittest.TestCase):
 
             self.assertEqual('<case text="&#34;(*)&#34;,&#34;#FOO EQ #BAR&#34;,&#34;#BAZ EQ 123&#34;,&#34;NONE&#34;" comment="DECIDE FOR EVERY CONDITION" color="ffffff">\n'
                              '<qCase>\n'
-                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="#C = 3" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '<qCase>\n'
-                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="#D = 4" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '<qCase>\n'
-                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n'
+                             '<instruction text="IGNORE" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n'
                              '</qCase>\n'
                              '</case>\n',
                              output.getvalue())
@@ -553,8 +545,7 @@ class ExitNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<jump text="ESCAPE" comment="" color="ffff80" rotated="0" disabled="0">\n'
-                             '</jump>\n',
+            self.assertEqual('<jump text="ESCAPE" comment="" color="ffff80" rotated="0" disabled="0"></jump>\n',
                              output.getvalue())
 
 
@@ -573,9 +564,9 @@ class ReinputTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<jump text="REINPUT ''*WARNING*: You have changed the Override field from &#34;&#34;Y&#34;&#34;.''" comment="" color="ffff80" rotated="0" disabled="0">\n'
-                             '</jump>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<jump text="REINPUT ''*WARNING*: You have changed the Override field from &#34;&#34;Y&#34;&#34;.''" comment="" color="ffff80" rotated="0" disabled="0"></jump>\n',
+                output.getvalue())
 
 
 class ForeverNodeTest(unittest.TestCase):
@@ -664,9 +655,9 @@ class InstructionNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<instruction text="TEST" comment="" color="ffffff" rotated="0" disabled="0">\n'
-                             '</instruction>\n',
-                             output.getvalue())
+            self.assertEqual(
+                '<instruction text="TEST" comment="" color="ffffff" rotated="0" disabled="0"></instruction>\n',
+                output.getvalue())
 
 
 class DatabaseUpdateTest(unittest.TestCase):
