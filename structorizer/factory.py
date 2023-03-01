@@ -43,6 +43,7 @@ class StatementFactory:
         'DEFINE_DATA': nodes.InstructionNode,
         'DEFINE_WINDOW': nodes.InstructionNode,
         'DEFINE_SUBROUTINE': nodes.WhileNode,
+        'END_TRANSACTION': nodes.DatabaseInstruction,
         'ESCAPE': nodes.ExitNode,
         'FETCH': nodes.ExternalExitNode,
         'FIND_with_loop': nodes.DatabaseLoop,
@@ -67,11 +68,13 @@ class StatementFactory:
         'REPEAT_WHILE': nodes.WhileNode,
         'RESET': nodes.InstructionNode,
         'SET_KEY': nodes.InstructionNode,
+        'SET_WINDOW': nodes.InstructionNode,
         'SUBTRACT': nodes.InstructionNode,
         'STACK': nodes.InstructionNode,
         'STORE': nodes.DatabaseInstruction,
         'UPDATE': nodes.DatabaseInstruction,
         'assignment_all': nodes.DBAssignment,       # <assignment_all> is specific to STORE and UPDATE
+        'WRITE': nodes.InstructionNode,
         'END': nodes.InstructionNode,
         '^': nodes.NullStatement
     }

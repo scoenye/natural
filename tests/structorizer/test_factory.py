@@ -96,6 +96,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<DEFINE_WINDOW>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_end_transaction(self):
+        gp_node = grammar.ExpressionNode(1, '<END_TRANSACTION>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
+
     def test_escape(self):
         gp_node = grammar.ExpressionNode(1, '<ESCAPE>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.ExitNode)
@@ -188,6 +192,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<SET_KEY>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
+    def test_set_window(self):
+        gp_node = grammar.ExpressionNode(1, '<SET_WINDOW>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
+
     def test_stack(self):
         gp_node = grammar.ExpressionNode(1, '<STACK>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
@@ -199,6 +207,10 @@ class StatementFactoryTest(unittest.TestCase):
     def test_update(self):
         gp_node = grammar.ExpressionNode(1, '<UPDATE>')
         self.assertIsInstance(Factory.node(gp_node, None),  nodes.DatabaseInstruction)
+
+    def test_write(self):
+        gp_node = grammar.ExpressionNode(1, '<WRITE>')
+        self.assertIsInstance(Factory.node(gp_node, None),  nodes.InstructionNode)
 
     def test_end(self):
         gp_node = grammar.ExpressionNode(1, '<END>')
