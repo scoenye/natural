@@ -68,6 +68,10 @@ class StatementFactoryTest(unittest.TestCase):
         gp_node = grammar.ExpressionNode(1, '<DECIDE_ON_branch>')
         self.assertIsInstance(Factory.node(gp_node, None), nodes.ToCaseBranch)
 
+    def test_decide_on_condition(self):
+        gp_node = grammar.ExpressionNode(1, '<DECIDE_ON_condition>')
+        self.assertIsInstance(Factory.node(gp_node, None), nodes.ToCaseCondition)
+
     def test_decide_on_none(self):
         gp_node = grammar.ExpressionNode(1, '<DECIDE_ON_none>')
         self.assertIsInstance(Factory.node(gp_node, None), nodes.ToNoneBranch)

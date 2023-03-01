@@ -226,6 +226,24 @@ class ToCaseBranch(CaseBranch):
             child.build('instruction')
 
 
+class ToCaseCondition(Statement):
+    """
+    A DECIDE ON FIRST VALUE branch can cover multiple values. These need to be
+    aggregated and passed to upstream as a single entity. Otherwise, the count
+    of conditions and branches will not line up result in an invalid NSD file.
+    """
+    def __init__(self, gp_node, parent):
+        super().__init__(gp_node, parent)
+
+        self.node_text['condition'] = []
+
+    def build(self, field):
+        for child in self.child_nodes:
+            child.build('condition')   # Collect the parts here
+
+        self.parent.add_text(field, ' '.join(self.node_text['condition']))
+
+
 class ToNoneBranch(ToCaseBranch):
     """
     The ToNoneBranch is essentially a ToCaseBranch, but with a slightly

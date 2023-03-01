@@ -212,6 +212,30 @@ class ToCaseBranchTest(unittest.TestCase):
                 output.getvalue())
 
 
+class ToCaseConditionTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.gp_decide_on = MagicMock()
+
+        gp_on_condition = ExpressionNode(0,'<DECIDE_ON_condition>')
+        gp_on_condition.add_node(1, TerminalNode(1, 'B'))
+
+        gp_value_list = ExpressionNode(1, '<DECIDE_ON_value_list>')
+        gp_on_condition.add_node(1, gp_value_list)
+
+        gp_value_list.add_node(2, TerminalNode(2, ','))
+        gp_value_list.add_node(2, TerminalNode(2, 'C'))
+
+        self.diagram_node = nodes.ToCaseCondition(gp_on_condition, self.gp_decide_on)
+
+    def test_build(self):
+        self.diagram_node.import_expressions(StatementFactory)
+        self.diagram_node.build('branches')
+
+        self.gp_decide_on.add_text.assert_called_with('branches', 'B , C')
+
+
 class ToCaseNoneTest(unittest.TestCase):
 
     def setUp(self) -> None:
