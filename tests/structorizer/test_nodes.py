@@ -617,15 +617,26 @@ class ForNodeTest(unittest.TestCase):
     def setUp(self) -> None:
         self.grammar = ExpressionNode(0, '<FOR>')
         self.grammar.add_node(1, TerminalNode(1, 'FOR'))
+
         gp_control = ExpressionNode(1, '<user_identifier>')
-        gp_control.add_node(2, TerminalNode(2, '#J'))
         self.grammar.add_node(1, gp_control)
+        gp_control.add_node(2, TerminalNode(2, '#J'))
+
         gp_start = ExpressionNode(1, '<constant_integer_pos>')
-        gp_start.add_node(2, TerminalNode(2, '1'))
         self.grammar.add_node(1, gp_start)
+        gp_start.add_node(2, TerminalNode(2, '1'))
+
         gp_to = ExpressionNode(1, '<user_identifier>')
-        gp_to.add_node(2, TerminalNode(2, 'C*SOMETHING'))
         self.grammar.add_node(1, gp_to)
+        gp_to.add_node(2, TerminalNode(2, 'C*SOMETHING'))
+
+        gp_step = ExpressionNode(1, '<constant_integer_neg>')
+        self.grammar.add_node(1, gp_step)
+        gp_step.add_node(2, TerminalNode(2, '-1'))
+
+        gp_statements = ExpressionNode(1, '<statement_list>')
+        self.grammar.add_node(1, gp_statements)
+        gp_statements.add_node(2, TerminalNode(2, 'IGNORE'))
 
         self.diagram_node = nodes.ForNode(self.grammar, None)
 
@@ -648,7 +659,7 @@ class ForNodeTest(unittest.TestCase):
         with io.StringIO() as output:
             self.diagram_node.render(output)
 
-            self.assertEqual('<for text="FOR #J &#60;- 1 to C*SOMETHING" comment="" color="ffffff">\n'
+            self.assertEqual('<for text="FOR #J &#60;- 1 to C*SOMETHING by -1" comment="" color="ffffff">\n'
                              '  <qFor>\n'
                              '  </qFor>\n'
                              '</for>\n',

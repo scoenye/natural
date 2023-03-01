@@ -361,14 +361,22 @@ class ForNode(Statement):
         self.node_text['for_control'] = []
         self.node_text['for_from'] = []
         self.node_text['for_to'] = []
+        self.node_text['for_step'] = []
 
     def open(self, out_file):
+        # Only show the step field if a step expression is present in the grammar.
+        if len(self.node_text['for_step']) > 0:
+            step = ' by ' + ' '.join(self.node_text['for_step'])
+        else:
+            step = ''
+
         # for uses &#60; (less than) to separate the loop variable from the values
-        print('<for text="{instruction} {for_control} &#60;- {for_from} to {for_to}" comment="" color="{color}">'.format(
+        print('<for text="{instruction} {for_control} &#60;- {for_from} to {for_to}{for_step}" comment="" color="{color}">'.format(
             instruction=' '.join(self.node_text['instruction']),
             for_control=' '.join(self.node_text['for_control']),
             for_from=' '.join(self.node_text['for_from']),
             for_to=' '.join(self.node_text['for_to']),
+            for_step = step,
             color=self.color), file=out_file)
         print('  <qFor>', file=out_file)
 
@@ -397,8 +405,18 @@ class ForNode(Statement):
         child = self.child_nodes[3]  # end value
         child.build('for_to')
 
-        for child in self.child_nodes[4:-1]:
-            child.build('instruction')
+        # It does appear a single loop statement results in a statement_list expression, even
+        # in a trimmed tree. If element[4] is not a statement_list, take it as the step expression
+        if self.child_nodes[4].matches('<statement_list>'):
+            for child in self.child_nodes[4:-1]:
+                child.build('instruction')
+        else:
+            child = self.child_nodes[4]  # end value
+            # TODO: Structorizer does not like a space in negative values
+            child.build('for_step')
+
+            for child in self.child_nodes[5:-1]:
+                child.build('instruction')
 
 
 class ForeverNode(Statement):
